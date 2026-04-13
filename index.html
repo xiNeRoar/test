@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="zh-HK">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OMHK - Ethereal Presence Secured</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet" />
+
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                black: "#1A1A1A",
+                darkGray: "#525252",
+                gray: "#E5E7EB",
+                lightGray: "#F3F4F6",
+                white: "#FFFFFF",
+                blue: {
+                  50: "#EBF5FF",
+                  100: "#D1E8FF",
+                  light: "#A5CFFF",
+                  DEFAULT: "#2563EB",
+                  dark: "#1D4ED8",
+                },
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Playfair Display", "serif"],
+            },
+            boxShadow: {
+              soft: "0 10px 40px -10px rgba(0,0,0,0.08)",
+              glass: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* 隱藏/顯示頁面動畫 */
+      .page-view {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.4s ease-in-out;
+      }
+      .page-view.active {
+        display: block;
+        opacity: 1;
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 漸變字體與背景 */
+      .text-gradient {
+        background: linear-gradient(135deg, #a5cfff, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .bg-noise {
+        /* 模擬設計中的顆粒感背景 */
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.03;
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+      }
+      .blob-shape {
+        border-radius: 50% 50% 0 0;
+        background: linear-gradient(180deg, #3b82f6 0%, #a5cfff 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-brand-black font-sans antialiased relative">
+    <!-- 全局雜訊紋理 -->
+    <div class="bg-noise fixed"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Logo -->
+        <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+          <div
+            class="w-10 h-10 rounded-full bg-brand-blue flex items-center justify-center text-white font-serif italic font-bold text-xl">
+            Y
+          </div>
+          <span class="font-bold tracking-tight">OMHK</span>
+        </div>
+
+        <!-- Desktop Links -->
+        <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-brand-darkGray">
+          <a
+            href="#about"
+            onclick="navigateTo('about')"
+            class="hover:text-brand-blue transition-colors"
+            >關於我們</a
+          >
+          <a
+            href="#portfolio"
+            onclick="navigateTo('portfolio')"
+            class="hover:text-brand-blue transition-colors"
+            >參考案例</a
+          >
+          <a
+            href="#contact"
+            onclick="navigateTo('contact')"
+            class="hover:text-brand-blue transition-colors"
+            >獲取方案計劃書</a
+          >
+        </div>
+
+        <!-- CTA -->
+        <div class="hidden md:block">
+          <button
+            onclick="navigateTo('contact')"
+            class="bg-brand-blue text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-brand-blue-dark transition-colors shadow-lg shadow-blue-500/30">
+            聯絡我們
+          </button>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="md:hidden text-2xl text-brand-black">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="pt-24 pb-20 overflow-hidden min-h-screen">
+      <!-- ==================== HOME PAGE ==================== -->
+      <section id="page-home" class="page-view active max-w-7xl mx-auto px-6">
+        <!-- Hero -->
+        <div class="flex flex-col md:flex-row items-center justify-between py-16 md:py-24 gap-12">
+          <div class="md:w-1/2 space-y-6 z-20">
+            <h1
+              class="text-5xl md:text-6xl font-bold leading-tight tracking-tight text-brand-black">
+              我們以精準策略與實際執行<br />
+              <span class="text-brand-blue">協助品牌穩定成長</span>
+            </h1>
+            <p class="text-brand-darkGray text-lg max-w-lg">
+              Digital marketing with precise strategy. We provide data-driven solutions to help your
+              business thrive in the digital landscape.
+            </p>
+            <div class="flex gap-4 pt-4">
+              <button
+                onclick="navigateTo('contact')"
+                class="bg-brand-blue text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30">
+                獲取方案計劃書
+              </button>
+              <button
+                onclick="navigateTo('about')"
+                class="border border-gray-300 text-brand-black px-8 py-3 rounded-full font-semibold hover:bg-gray-50 transition-colors">
+                了解更多
+              </button>
+            </div>
+          </div>
+          <div class="md:w-1/2 relative flex justify-end w-full">
+            <!-- Hero Abstract Shape -->
+            <div
+              class="w-64 h-96 md:w-80 md:h-[500px] blob-shape relative overflow-hidden shadow-2xl">
+              <!-- Glassmorphism overlay card -->
+              <div
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 h-3/5 bg-white/30 backdrop-blur-md border border-white/40 rounded-3xl shadow-glass"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pain Points -->
+        <div class="py-20 text-center">
+          <h2 class="text-3xl font-bold mb-12">你是否正面對以下問題？</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-10 rounded-3xl shadow-soft">
+              <div
+                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-200 to-orange-400 mb-6 mx-auto"></div>
+              <h3 class="font-bold text-lg mb-2">Website traffic but no leads</h3>
+              <p class="text-sm text-brand-darkGray">
+                High bounce rate and low conversion. Your visitors are leaving without taking
+                action.
+              </p>
+            </div>
+            <div class="bg-white p-10 rounded-3xl shadow-soft">
+              <div
+                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-200 to-yellow-400 flex items-center justify-center mb-6 mx-auto">
+                <div class="flex gap-1">
+                  <div class="w-2 h-2 rounded-full bg-white"></div>
+                  <div class="w-2 h-2 rounded-full bg-white"></div>
+                  <div class="w-2 h-2 rounded-full bg-white"></div>
+                </div>
+              </div>
+              <h3 class="font-bold text-lg mb-2">No Social Media strategy</h3>
+              <p class="text-sm text-brand-darkGray">
+                Inconsistent posting and low engagement. Brand presence is weakening.
+              </p>
+            </div>
+            <div class="bg-white p-10 rounded-3xl shadow-soft">
+              <div
+                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-300 to-blue-500 mb-6 mx-auto"></div>
+              <h3 class="font-bold text-lg mb-2">Decreasing marketing ROI</h3>
+              <p class="text-sm text-brand-darkGray">
+                Spending more on ads but getting less return. Targeting needs optimization.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="py-20">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">我們的服務</h2>
+            <a href="#" class="text-brand-blue font-semibold text-sm hover:underline"
+              >查看所有服務 →</a
+            >
+          </div>
+          <div class="flex flex-col md:flex-row gap-6 justify-center">
+            <div
+              class="bg-white p-10 rounded-[32px] shadow-soft flex-1 hover:-translate-y-2 transition-transform">
+              <div
+                class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center mb-16">
+                <i class="fa-solid fa-robot text-brand-darkGray"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-4">AI 聊天機器人</h3>
+              <p class="text-brand-darkGray text-sm">
+                提供全天候自動化客戶服務，提升轉化率與顧客滿意度。
+              </p>
+            </div>
+            <div
+              class="bg-brand-blue text-white p-10 rounded-[32px] shadow-soft flex-1 transform md:-translate-y-6">
+              <div
+                class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center mb-16">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-4">SEO 優化</h3>
+              <p class="text-blue-100 text-sm">
+                透過數據分析與關鍵字佈局，讓您的網站在搜尋引擎名列前茅。
+              </p>
+            </div>
+            <div
+              class="bg-white p-10 rounded-[32px] shadow-soft flex-1 hover:-translate-y-2 transition-transform">
+              <div
+                class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center mb-16">
+                <i class="fa-solid fa-pen-nib text-brand-darkGray"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-4">內容行銷</h3>
+              <p class="text-brand-darkGray text-sm">
+                打造具吸引力的品牌故事與社群內容，建立忠誠受眾。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why Choose Us (Plans) -->
+        <div class="py-20">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-2">為什麼選擇 Letitia?</h2>
+            <p class="text-brand-blue text-sm">提供不同階段的數碼方案，陪伴品牌成長。</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Plan 1 -->
+            <div
+              class="bg-white p-10 rounded-[40px] shadow-soft border border-gray-100 flex flex-col transform hover:scale-105 transition-transform">
+              <h3 class="text-3xl font-bold text-center mb-10 text-brand-black">Phase 1</h3>
+              <ul class="space-y-5 text-sm text-brand-darkGray font-medium">
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
+                  <span>Suitable for startups</span>
+                </li>
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
+                  <span>Basic SEO Setup</span>
+                </li>
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
+                  <span>Content consultation</span>
+                </li>
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
+                  <span>Analytics reports</span>
+                </li>
+              </ul>
+            </div>
+            <!-- Plan 2 -->
+            <div class="p-10 rounded-[40px] flex flex-col border border-gray-200 bg-gray-50/50">
+              <h3 class="text-3xl font-bold text-center mb-10 text-brand-blue-light">Phase 2</h3>
+              <ul class="space-y-5 text-sm text-gray-400 font-medium">
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check mt-1 opacity-50"></i>
+                  <span>Mid-sized growing companies</span>
+                </li>
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check mt-1 opacity-50"></i> <span>SEO + Ads bundle</span>
+                </li>
+                <li class="flex items-start gap-4">
+                  <i class="fa-solid fa-check mt-1 opacity-50"></i>
+                  <span>Customization options</span>
+                </li>
+                <li class="flex items-start gap-4 opacity-50">
+                  <i class="fa-solid fa-xmark mt-1"></i> <span>Priority support</span>
+                </li>
+              </ul>
+            </div>
+            <!-- Plan 3 -->
+            <div class="p-10 rounded-[40px] flex flex-col border border-gray-200 bg-gray-50/50">
+              <h3 class="text-3xl font-bold text-center mb-10 text-brand-blue-light">Phase 3</h3>
+              <ul class="space-y-5 text-sm text-gray-400 font-medium">
+                <li class="flex items-start gap-4 opacity-50">
+                  <i class="fa-solid fa-xmark mt-1"></i> <span>Enterprise scale</span>
+                </li>
+                <li class="flex items-start gap-4 opacity-50">
+                  <i class="fa-solid fa-xmark mt-1"></i> <span>Full AI assistance</span>
+                </li>
+                <li class="flex items-start gap-4 opacity-50">
+                  <i class="fa-solid fa-xmark mt-1"></i> <span>Premium analytics</span>
+                </li>
+                <li class="flex items-start gap-4 opacity-50">
+                  <i class="fa-solid fa-xmark mt-1"></i> <span>24/7 support</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study Preview -->
+        <div class="py-20 relative">
+          <!-- Decorative background blob -->
+          <div
+            class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-brand-blue-50 to-transparent -z-10 rounded-l-full"></div>
+
+          <div class="flex justify-between items-end mb-10">
+            <div>
+              <h2 class="text-3xl font-bold">案例研究</h2>
+              <p class="text-brand-darkGray mt-2">
+                Explore successful campaigns across various industries.
+              </p>
+            </div>
+            <button
+              onclick="navigateTo('portfolio')"
+              class="bg-brand-blue text-white px-6 py-2 rounded-full font-semibold text-sm">
+              所有案例 <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              class="bg-white rounded-3xl aspect-video shadow-sm border border-gray-100 cursor-pointer overflow-hidden group">
+              <div
+                class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
+            </div>
+            <div
+              class="bg-white rounded-3xl aspect-video shadow-sm border border-gray-100 cursor-pointer overflow-hidden group">
+              <div
+                class="w-full h-full bg-gradient-to-tr from-brand-blue-50 to-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
+            </div>
+            <div
+              class="md:col-span-2 bg-white rounded-3xl aspect-[21/9] shadow-sm border border-gray-100 cursor-pointer overflow-hidden group">
+              <div
+                class="w-full h-full bg-gradient-to-r from-gray-100 via-blue-50 to-gray-100 group-hover:scale-105 transition-transform duration-500"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== ABOUT US PAGE ==================== -->
+      <section id="page-about" class="page-view max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center justify-between py-16 gap-12">
+          <div class="md:w-1/2 space-y-6">
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight">
+              我們將複雜的數碼行銷，<br />
+              轉化為 <span class="text-brand-blue">清晰、可執行的方案。</span>
+            </h1>
+            <p class="text-brand-darkGray text-lg max-w-md">
+              Digital marketing is complex. We simplify it. Through data analytics, creative
+              strategy, and precise execution, we build digital experiences that connect and
+              convert.
+            </p>
+            <button
+              onclick="navigateTo('contact')"
+              class="bg-brand-blue-light text-brand-black px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-300 transition-colors">
+              聯絡我們的團隊
+            </button>
+          </div>
+          <div class="md:w-1/2 flex justify-end">
+            <!-- About Us Blob -->
+            <div
+              class="w-72 h-80 blob-shape bg-gradient-to-t from-gray-200 to-brand-blue shadow-lg border-4 border-white"></div>
+          </div>
+        </div>
+
+        <!-- Philosophy -->
+        <div class="py-16">
+          <h2 class="text-3xl font-bold mb-12">我們的理念</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-200 pt-12">
+            <div>
+              <i class="fa-solid fa-chess-knight text-2xl mb-4"></i>
+              <h3 class="font-bold text-xl mb-2">Strategy First</h3>
+              <p class="text-brand-darkGray text-sm">
+                We don't guess. We analyze market data to build a solid foundation.
+              </p>
+            </div>
+            <div>
+              <i class="fa-solid fa-bullseye text-2xl mb-4"></i>
+              <h3 class="font-bold text-xl mb-2">Design with Purpose</h3>
+              <p class="text-brand-darkGray text-sm">
+                Aesthetics meet functionality. Every design choice drives user action.
+              </p>
+            </div>
+            <div>
+              <i class="fa-solid fa-rocket text-2xl mb-4"></i>
+              <h3 class="font-bold text-xl mb-2">Execution that Delivers</h3>
+              <p class="text-brand-darkGray text-sm">
+                Flawless implementation, continuous monitoring, and agile adjustments.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expertise -->
+        <div class="py-16 flex flex-col md:flex-row gap-12">
+          <div class="md:w-1/3">
+            <h2 class="text-3xl font-bold mb-4">專業領域</h2>
+            <p class="text-brand-darkGray">跨越不同平台與技術界限，為品牌提供全方位數碼支援。</p>
+          </div>
+          <div class="md:w-2/3 space-y-4">
+            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
+              <div
+                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
+                I
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">AI 聊天機器人</h3>
+                <p class="text-sm text-brand-darkGray">自然語言處理、自動化客服流程、轉換率提升</p>
+              </div>
+            </div>
+            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
+              <div
+                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
+                II
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">SEO 優化</h3>
+                <p class="text-sm text-brand-darkGray">技術性 SEO、內容行銷策略、在地化搜尋優化</p>
+              </div>
+            </div>
+            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
+              <div
+                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
+                III
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">社群媒體經營</h3>
+                <p class="text-sm text-brand-darkGray">品牌視覺定調、社群互動企劃、廣告投放策略</p>
+              </div>
+            </div>
+            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
+              <div
+                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
+                IV
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">公關與品牌行銷</h3>
+                <p class="text-sm text-brand-darkGray">媒體關係建立、危機處理、品牌活動策劃</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team -->
+        <div class="py-20 relative">
+          <!-- Soft background glow -->
+          <div
+            class="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-blue-100 rounded-full filter blur-[100px] -z-10 opacity-50"></div>
+
+          <h2 class="text-3xl font-bold mb-12 text-center">團隊介紹</h2>
+
+          <!-- Highlight Member -->
+          <div
+            class="flex flex-col md:flex-row items-center gap-10 bg-white p-10 rounded-[40px] shadow-soft mb-12">
+            <div
+              class="w-48 h-48 md:w-64 md:h-64 rounded-3xl overflow-hidden bg-brand-blue relative">
+              <!-- Simulated portrait with CSS -->
+              <div
+                class="absolute inset-0 bg-gradient-to-tr from-brand-blue-dark to-brand-blue-light mix-blend-multiply"></div>
+              <i
+                class="fa-solid fa-user text-9xl text-white/50 absolute -bottom-10 left-1/2 -translate-x-1/2"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-brand-blue tracking-widest uppercase mb-1">
+                Founder / CEO
+              </p>
+              <h3 class="text-4xl font-bold mb-4">Ruby</h3>
+              <p class="text-brand-darkGray leading-relaxed max-w-lg">
+                擁有超過十年數碼行銷經驗，專注於融合數據分析與創意策略。堅信科技是工具，而人與人之間的連結才是品牌長遠發展的核心。
+              </p>
+            </div>
+          </div>
+
+          <!-- Team List -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b-2 border-brand-black text-sm uppercase tracking-wider">
+                  <th class="pb-4 font-bold">Name</th>
+                  <th class="pb-4 font-bold">Role</th>
+                  <th class="pb-4 font-bold hidden md:table-cell">Email</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm font-medium">
+                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <td class="py-4">Jane McColvert</td>
+                  <td class="py-4 text-brand-darkGray">Director of Technology</td>
+                  <td class="py-4 text-brand-blue hidden md:table-cell">
+                    jane.mccolvert@letitia.void
+                  </td>
+                </tr>
+                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <td class="py-4">Alex Chen</td>
+                  <td class="py-4 text-brand-darkGray">Head of SEO</td>
+                  <td class="py-4 text-brand-blue hidden md:table-cell">alex.chen@letitia.void</td>
+                </tr>
+                <tr class="border-b border-gray-100 hover:bg-bg-gray-50 transition-colors">
+                  <td class="py-4">Sarah Johnson</td>
+                  <td class="py-4 text-brand-darkGray">Lead Creative Designer</td>
+                  <td class="py-4 text-brand-blue hidden md:table-cell">sarah.j@letitia.void</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="py-20 text-center">
+          <h2 class="text-4xl font-bold mb-6">一齊傾下，<br />你嘅品牌可以點樣成長</h2>
+          <button
+            onclick="navigateTo('contact')"
+            class="bg-brand-blue-light text-brand-black px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-300 transition-colors shadow-lg">
+            聯絡我們
+          </button>
+        </div>
+      </section>
+
+      <!-- ==================== PORTFOLIO PAGE ==================== -->
+      <section id="page-portfolio" class="page-view max-w-7xl mx-auto px-6">
+        <div class="py-16 text-center max-w-2xl mx-auto space-y-6">
+          <span
+            class="text-xs font-bold text-brand-blue tracking-widest uppercase border border-blue-200 bg-blue-50 px-3 py-1 rounded-full"
+            >Portfolio Showcase</span
+          >
+          <h1 class="text-4xl md:text-5xl font-bold">我們的作品與案例</h1>
+          <p class="text-brand-darkGray">
+            探索我們如何透過設計、數據與科技，為不同品牌創造價值與影響力。
+          </p>
+          <div class="flex justify-center gap-4 pt-4">
+            <button
+              class="bg-brand-blue-light text-brand-black px-6 py-2 rounded-full font-semibold text-sm">
+              所有作品
+            </button>
+            <button
+              class="border border-gray-300 text-brand-black px-6 py-2 rounded-full font-semibold text-sm hover:bg-gray-50">
+              Web/App
+            </button>
+          </div>
+        </div>
+
+        <!-- Abstract Images Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+          <div
+            class="aspect-square rounded-3xl bg-gradient-to-tr from-orange-100 to-yellow-100 shadow-sm"></div>
+          <div
+            class="aspect-square rounded-3xl bg-gradient-to-br from-blue-100 to-purple-100 shadow-sm flex items-center justify-center">
+            <i class="fa-solid fa-sparkles text-white text-3xl opacity-50"></i>
+          </div>
+          <div
+            class="aspect-square rounded-3xl bg-gradient-to-bl from-blue-50 to-blue-200 shadow-sm relative overflow-hidden">
+            <div
+              class="absolute inset-0 bg-white/20 backdrop-blur-sm m-4 rounded-2xl border border-white/50"></div>
+          </div>
+          <div
+            class="aspect-square rounded-3xl bg-gradient-to-t from-teal-100 to-emerald-50 shadow-sm"></div>
+        </div>
+
+        <div class="text-center max-w-3xl mx-auto mb-20">
+          <h2 class="text-3xl md:text-4xl font-bold leading-tight">
+            每個項目都有不同目標，<br />我哋會因應品牌定位、資源及市場情況，<br />制定合適嘅數碼策略，而唔係一套公式走天下。
+          </h2>
+        </div>
+
+        <!-- Category: Website / AI -->
+        <div class="mb-20">
+          <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
+            <h2 class="text-2xl font-bold">網站/AI聊天機器人</h2>
+            <a
+              href="#"
+              onclick="navigateTo('case-study')"
+              class="text-brand-blue font-semibold text-sm hover:underline"
+              >查看詳情 →</a
+            >
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div onclick="navigateTo('case-study')" class="cursor-pointer group">
+              <div
+                class="bg-gray-100 aspect-video rounded-2xl mb-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
+                <i class="fa-solid fa-globe text-3xl text-gray-300"></i>
+              </div>
+              <h3 class="font-bold">TechCore 科技企業網站</h3>
+              <p class="text-sm text-brand-darkGray">Website / UXUI / 3D Animation</p>
+            </div>
+            <div class="cursor-pointer group">
+              <div
+                class="bg-gray-100 aspect-video rounded-2xl mb-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
+                <i class="fa-solid fa-robot text-3xl text-gray-300"></i>
+              </div>
+              <h3 class="font-bold">RetailX 智能客服 AI</h3>
+              <p class="text-sm text-brand-darkGray">Chatbot / E-commerce / Data Integration</p>
+            </div>
+            <div class="cursor-pointer group">
+              <div
+                class="bg-gray-100 aspect-video rounded-2xl mb-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
+                <i class="fa-solid fa-cart-shopping text-3xl text-gray-300"></i>
+              </div>
+              <h3 class="font-bold">Global Store 跨境網店</h3>
+              <p class="text-sm text-brand-darkGray">Shopify / SEO / Payment Gateway</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category: SEO -->
+        <div class="mb-20">
+          <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
+            <h2 class="text-2xl font-bold">SEO優化</h2>
+            <a href="#" class="text-brand-blue font-semibold text-sm hover:underline">查看詳情 →</a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              class="bg-brand-blue-50 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-6">
+              <div
+                class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center shadow-sm shrink-0">
+                <i class="fa-solid fa-arrow-trend-up text-brand-blue text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-2">HealthPulse 流量翻倍計畫</h3>
+                <p class="text-sm text-brand-darkGray mb-4">
+                  透過深度內容營銷與技術架構優化，3個月內自然搜尋流量增長超過 150%。
+                </p>
+                <div class="flex gap-2">
+                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
+                    >Content Marketing</span
+                  >
+                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
+                    >Local SEO</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-brand-blue-50 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-6">
+              <div
+                class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center shadow-sm shrink-0">
+                <i class="fa-solid fa-magnifying-glass-chart text-brand-blue text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-2">ZenRooms 佈局搜尋排名</h3>
+                <p class="text-sm text-brand-darkGray mb-4">
+                  針對高轉化關鍵字進行優化，成功搶佔多個核心字詞的首頁排名。
+                </p>
+                <div class="flex gap-2">
+                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
+                    >Keyword Strategy</span
+                  >
+                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
+                    >Link Building</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== CASE STUDY DETAILS PAGE ==================== -->
+      <section id="page-case-study" class="page-view max-w-7xl mx-auto px-6">
+        <div class="py-16 text-center border-b border-gray-200 mb-12 relative">
+          <!-- Background ambient glow -->
+          <div class="absolute inset-0 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
+          <span class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-4 block"
+            >Case Study</span
+          >
+          <h1 class="text-5xl font-bold mb-8">網站/AI聊天機器人</h1>
+          <div class="w-16 h-1 bg-brand-blue mx-auto rounded-full"></div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-16 mb-20">
+          <div class="md:w-2/3 space-y-8">
+            <div>
+              <h3 class="text-xs font-bold text-brand-gray tracking-widest uppercase mb-4">
+                Project Details
+              </h3>
+              <p class="text-lg leading-relaxed text-brand-black font-medium">
+                We developed a comprehensive digital ecosystem for our client, integrating advanced
+                AI chatbot capabilities into a fluid, responsive web interface. The goal was to
+                bridge the gap between complex data processing and user-centric interaction,
+                creating a kinetic experience that feels both intelligent and intuitive.
+              </p>
+            </div>
+
+            <div class="space-y-6 pt-8">
+              <h3 class="text-xs font-bold text-brand-gray tracking-widest uppercase mb-4">
+                What We Do
+              </h3>
+
+              <div class="flex gap-4">
+                <i class="fa-solid fa-circle-check text-brand-blue mt-1"></i>
+                <div>
+                  <h4 class="font-bold mb-1">Website structure planning</h4>
+                  <p class="text-sm text-brand-darkGray">
+                    Architecting high-performance sitemaps for maximum retention.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <i class="fa-solid fa-circle-check text-brand-blue mt-1"></i>
+                <div>
+                  <h4 class="font-bold mb-1">UI/UX design</h4>
+                  <p class="text-sm text-brand-darkGray">
+                    Creating ethereal, glassmorphic interfaces optimized for motion.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <i class="fa-solid fa-circle-check text-brand-blue mt-1"></i>
+                <div>
+                  <h4 class="font-bold mb-1">SEO-friendly content structure</h4>
+                  <p class="text-sm text-brand-darkGray">
+                    Strategic keyword placement without compromising the brand feel.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Client Info Sidebar -->
+          <div class="md:w-1/3 space-y-8 bg-gray-50 p-8 rounded-3xl h-fit">
+            <div>
+              <h3 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-2">
+                Client
+              </h3>
+              <p class="font-bold">Brand Website & Digital Presence</p>
+            </div>
+            <div>
+              <h3 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-2">
+                Category
+              </h3>
+              <p class="font-bold">Website / SEO / UX</p>
+            </div>
+            <div>
+              <h3 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-2">
+                Timeline
+              </h3>
+              <p class="font-bold">12 Weeks • 2024</p>
+            </div>
+            <button
+              class="w-full bg-brand-blue-dark text-white py-3 rounded-xl font-bold shadow-md hover:bg-blue-800 transition-colors">
+              View Site
+            </button>
+          </div>
+        </div>
+
+        <!-- Image Grid Gallery -->
+        <div class="columns-1 md:columns-3 gap-4 space-y-4 mb-20">
+          <!-- Using varied aspect ratios and gradients to mimic the diverse textures in the design -->
+          <div
+            class="bg-gradient-to-br from-green-100 to-green-300 w-full aspect-square rounded-2xl"></div>
+          <div
+            class="bg-gradient-to-tr from-blue-200 to-teal-100 w-full aspect-video rounded-2xl"></div>
+          <div
+            class="bg-gradient-to-bl from-orange-200 to-yellow-100 w-full aspect-[3/4] rounded-2xl"></div>
+          <div
+            class="bg-gradient-to-t from-blue-400 to-cyan-200 w-full aspect-[4/3] rounded-2xl"></div>
+          <div
+            class="bg-gradient-to-b from-purple-100 to-pink-100 w-full aspect-square rounded-2xl"></div>
+          <div
+            class="bg-white border border-gray-200 w-full aspect-video rounded-2xl flex items-center justify-center overflow-hidden relative">
+            <!-- Dots pattern -->
+            <div
+              class="absolute w-10 h-10 bg-brand-blue rounded-full top-4 left-4 opacity-50"></div>
+            <div
+              class="absolute w-16 h-16 bg-brand-blue rounded-full bottom-4 right-10 opacity-60"></div>
+            <div
+              class="absolute w-8 h-8 bg-brand-blue rounded-full top-1/2 left-1/2 opacity-40"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== CONTACT US PAGE ==================== -->
+      <section id="page-contact" class="page-view max-w-7xl mx-auto px-6">
+        <!-- Hero Banner -->
+        <div
+          class="bg-gradient-to-br from-gray-500 to-brand-blue-dark rounded-[40px] p-10 md:p-16 text-white mb-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
+          <!-- Noise Overlay -->
+          <div class="absolute inset-0 bg-noise opacity-20"></div>
+
+          <div class="relative z-10 md:w-1/2 space-y-6">
+            <span
+              class="text-xs font-bold text-brand-black bg-white tracking-widest uppercase px-3 py-1 rounded-full"
+              >Portfolio Showcase</span
+            >
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight">一齊傾下你嘅<br />項目需要</h1>
+            <p class="text-gray-200 max-w-sm text-sm leading-relaxed">
+              無論你係想改善網站、提升曝光，或者建立清晰嘅數碼策略，都歡迎同我哋聯絡。
+            </p>
+            <div class="flex gap-4 pt-4">
+              <button
+                class="bg-white text-brand-black px-6 py-2 rounded-full font-bold text-sm hover:bg-gray-100">
+                預約免費諮詢
+              </button>
+              <button
+                class="border border-white text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-white/10">
+                聯絡我們
+              </button>
+            </div>
+          </div>
+
+          <div class="relative z-10 md:w-1/2">
+            <div class="border-2 border-white/30 rounded-3xl p-10 backdrop-blur-sm relative">
+              <h2 class="text-4xl md:text-5xl font-serif font-bold italic leading-tight">
+                Your journey<br />
+                may be tough,<br />
+                but the<br />
+                destination will<br />
+                be worth it.
+              </h2>
+              <i class="fa-solid fa-sparkles absolute top-6 right-6 text-2xl text-yellow-300"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form & Info Section -->
+        <div class="bg-brand-blue-50 rounded-[40px] p-8 md:p-16 flex flex-col md:flex-row gap-12">
+          <!-- Left Info -->
+          <div class="md:w-1/2 space-y-10">
+            <div>
+              <h3 class="text-brand-blue font-bold text-sm mb-2">聯絡我們</h3>
+              <h2 class="text-4xl font-bold mb-4 text-brand-black">免費初步諮詢</h2>
+              <p class="text-brand-darkGray text-sm max-w-sm leading-relaxed">
+                我哋提供一次免費初步諮詢，了解你嘅業務背景、目標及目前狀況，並就可行方向提供專業建議，無任何合作承諾。
+              </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-6">
+              <div class="bg-white p-6 rounded-2xl shadow-sm flex-1">
+                <i class="fa-solid fa-location-dot text-brand-blue mb-4 text-xl"></i>
+                <h4 class="font-bold text-sm mb-1">Office Nebula</h4>
+                <p class="text-xs text-brand-darkGray">12 Space Drift St.<br />Tokyo, Japan</p>
+              </div>
+              <div class="bg-white p-6 rounded-2xl shadow-sm flex-1">
+                <i class="fa-solid fa-at text-brand-blue mb-4 text-xl"></i>
+                <h4 class="font-bold text-sm mb-1">Transmission</h4>
+                <p class="text-xs text-brand-darkGray">
+                  hello@letitia.void<br />+81 (0) 90-1234-5678
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-brand-blue font-bold text-xs uppercase tracking-widest mb-4">
+                Social Waves
+              </h3>
+              <div class="flex gap-4">
+                <a
+                  href="#"
+                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-darkGray hover:text-brand-blue hover:border-brand-blue transition-colors"
+                  ><i class="fa-brands fa-instagram"></i
+                ></a>
+                <a
+                  href="#"
+                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-darkGray hover:text-brand-blue hover:border-brand-blue transition-colors"
+                  ><i class="fa-brands fa-x-twitter"></i
+                ></a>
+                <a
+                  href="#"
+                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-darkGray hover:text-brand-blue hover:border-brand-blue transition-colors"
+                  ><i class="fa-brands fa-facebook-f"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Form -->
+          <div class="md:w-1/2 bg-white rounded-3xl p-8 md:p-10 shadow-soft">
+            <form class="space-y-6">
+              <div>
+                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
+                  >姓名 Name</label
+                >
+                <input
+                  type="text"
+                  placeholder="您的姓名"
+                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
+                  >電子信箱 Email</label
+                >
+                <input
+                  type="email"
+                  placeholder="example@company.com"
+                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
+                  >主題 Subject</label
+                >
+                <select
+                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50 appearance-none">
+                  <option>選擇諮詢類型</option>
+                  <option>網站開發</option>
+                  <option>SEO 優化</option>
+                  <option>AI 聊天機器人</option>
+                  <option>其他</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
+                  >需求描述 Requirement</label
+                >
+                <textarea
+                  rows="4"
+                  placeholder="告訴我們您的目標與挑戰..."
+                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50 resize-none"></textarea>
+              </div>
+              <button
+                type="button"
+                class="w-full bg-brand-blue-light text-brand-black font-bold py-4 rounded-xl hover:bg-blue-300 transition-colors mt-4">
+                提交
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== POLICY PAGE ==================== -->
+      <section id="page-policy" class="page-view max-w-4xl mx-auto px-6 py-16">
+        <h1 class="text-5xl font-bold text-brand-blue-light mb-12">法律政策</h1>
+
+        <!-- Tabs -->
+        <div class="flex gap-8 border-b border-gray-200 mb-12">
+          <button class="pb-4 border-b-2 border-brand-black font-bold text-brand-black">
+            Privacy Policy
+          </button>
+          <button class="pb-4 font-semibold text-brand-darkGray hover:text-brand-black">
+            Terms of Service
+          </button>
+          <button class="pb-4 font-semibold text-brand-darkGray hover:text-brand-black">
+            Cookie Policy
+          </button>
+        </div>
+
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl font-bold">隱私權政策</h2>
+          <button class="bg-gray-100 text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-200">
+            <i class="fa-solid fa-download mr-2"></i>Download PDF
+          </button>
+        </div>
+
+        <p class="text-brand-darkGray mb-10 leading-relaxed">
+          At Letitia, we take your privacy seriously. This policy outlines how we collect, use, and
+          safeguard your personal information within our cyber-surreal digital universe. By
+          interacting with our interface, you consent to the data practices described in this
+          statement.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Clause 1 -->
+          <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-xs text-brand-blue font-bold tracking-widest uppercase"
+                >database</span
+              >
+              <h3 class="text-lg font-bold">1. Information Collection</h3>
+            </div>
+            <p class="text-sm text-brand-darkGray mb-4">
+              We collect information that identifies, relates to, describes, or is reasonably
+              capable of being associated with you. This includes:
+            </p>
+            <ul class="list-disc pl-5 space-y-2 text-sm text-brand-darkGray">
+              <li>Neural interface signature and session metadata.</li>
+              <li>Contact details provided during portal registration.</li>
+              <li>Interaction logs within the surrealist design environments.</li>
+              <li>Automated device telemetry via our proprietary "Wave" analysis scripts.</li>
+            </ul>
+          </div>
+
+          <!-- Clause 2 -->
+          <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-xs text-brand-blue font-bold tracking-widest uppercase"
+                >security</span
+              >
+              <h3 class="text-lg font-bold">2. Data Security Protocols</h3>
+            </div>
+            <p class="text-sm text-brand-darkGray">
+              Your data is encrypted using quantum-resistant algorithms and stored across
+              decentralized nodes within our secure ecosystem. We maintain physical, electronic, and
+              procedural safeguards that comply with international cyber-security standards to
+              protect your surreal identity.
+            </p>
+          </div>
+
+          <!-- Clause 3 -->
+          <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-xs text-brand-blue font-bold tracking-widest uppercase">share</span>
+              <h3 class="text-lg font-bold">3. Third-Party Integration</h3>
+            </div>
+            <p class="text-sm text-brand-darkGray">
+              Letitia does not sell, rent, or lease its customer lists to third parties. To help
+              provide our services, we may share data with trusted partners who assist us in
+              operating our website, conducting our business, or serving our users, so long as those
+              parties agree to keep this information confidential.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 pt-16 pb-8">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+          <!-- Brand -->
+          <div class="md:w-1/3">
+            <div class="flex items-center gap-2 mb-6">
+              <div
+                class="w-8 h-8 rounded-full bg-brand-black flex items-center justify-center text-white font-serif italic font-bold text-sm">
+                Y
+              </div>
+              <span class="font-bold tracking-tight text-lg">OMHK</span>
+            </div>
+            <p class="text-brand-darkGray text-sm max-w-xs leading-relaxed">
+              Defining the new frontier of market consciousness through advanced neural analytics.
+            </p>
+          </div>
+
+          <!-- Links -->
+          <div class="flex gap-16">
+            <div>
+              <h4 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-6">
+                Structure
+              </h4>
+              <ul class="space-y-4 text-sm font-semibold text-brand-darkGray">
+                <li>
+                  <a href="#about" onclick="navigateTo('about')" class="hover:text-brand-black"
+                    >關於我們</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#portfolio"
+                    onclick="navigateTo('portfolio')"
+                    class="hover:text-brand-black"
+                    >參考案例</a
+                  >
+                </li>
+                <li>
+                  <a href="#policy" onclick="navigateTo('policy')" class="hover:text-brand-black"
+                    >條款與細則</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-6">
+                Signals
+              </h4>
+              <div class="flex gap-4">
+                <a href="#" class="text-brand-darkGray hover:text-brand-black text-xl"
+                  ><i class="fa-brands fa-instagram"></i
+                ></a>
+                <a href="#" class="text-brand-darkGray hover:text-brand-black text-xl"
+                  ><i class="fa-brands fa-x-twitter"></i
+                ></a>
+                <a href="#" class="text-brand-darkGray hover:text-brand-black text-xl"
+                  ><i class="fa-brands fa-facebook-f"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-100 pt-8 text-xs text-gray-400 uppercase tracking-widest">
+          © 2024 ONLINE MARKETING HK. ETHEREAL PRESENCE SECURED.
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript for SPA Routing -->
+    <script>
+      function navigateTo(pageId) {
+        // Hide all pages
+        const pages = document.querySelectorAll(".page-view");
+        pages.forEach((page) => {
+          page.classList.remove("active");
+        });
+
+        // Show selected page
+        const targetPage = document.getElementById("page-" + pageId);
+        if (targetPage) {
+          targetPage.classList.add("active");
+          // Scroll to top
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // Update URL Hash without jumping
+        history.pushState(null, null, "#" + pageId);
+      }
+
+      // Handle initial load based on URL hash
+      window.addEventListener("DOMContentLoaded", () => {
+        const hash = window.location.hash.substring(1);
+        if (hash && document.getElementById("page-" + hash)) {
+          navigateTo(hash);
+        }
+      });
+    </script>
+  </body>
+</html>
