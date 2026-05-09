@@ -1,1150 +1,1256 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-HK">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OMHK - Ethereal Presence Secured</title>
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#FDFBF9">
+    <title>Scent.M | 專業香氣營銷與精品代工</title>
+    
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
-      rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Cactus+Classical+Serif&family=Mea+Culpa&family=Montserrat:wght@300;400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                black: "#1A1A1A",
-                darkGray: "#525252",
-                gray: "#E5E7EB",
-                lightGray: "#F3F4F6",
-                white: "#FFFFFF",
-                blue: {
-                  50: "#EBF5FF",
-                  100: "#D1E8FF",
-                  light: "#A5CFFF",
-                  DEFAULT: "#2563EB",
-                  dark: "#1D4ED8",
-                },
-              },
-            },
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-              serif: ["Playfair Display", "serif"],
-            },
-            boxShadow: {
-              soft: "0 10px 40px -10px rgba(0,0,0,0.08)",
-              glass: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
-            },
-          },
-        },
-      };
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            beige: '#F3EAE1',
+                            terracotta: '#A64B2A',
+                            brown: '#3B261D',
+                            moss: '#3B4A3D',
+                            light: '#FDFBF9'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Baskervville', '"Cactus Classical Serif"', 'serif'],
+                        sans: ['Montserrat', '"Noto Sans TC"', 'sans-serif'],
+                        script: ['"Mea Culpa"', 'cursive']
+                    }
+                }
+            }
+        }
     </script>
+
     <style>
-      /* 隱藏/顯示頁面動畫 */
-      .page-view {
-        display: none;
-        opacity: 0;
-        transition: opacity 0.4s ease-in-out;
-      }
-      .page-view.active {
-        display: block;
-        opacity: 1;
-        animation: fadeIn 0.5s ease-out forwards;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
+        /* ───── 全局設定 ───── */
+        :root {
+            --ease: cubic-bezier(0.25, 1, 0.35, 1);
+            --morph-target-color: #A64B2A;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+        
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
 
-      /* 漸變字體與背景 */
-      .text-gradient {
-        background: linear-gradient(135deg, #a5cfff, #3b82f6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .bg-noise {
-        /* 模擬設計中的顆粒感背景 */
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        opacity: 0.03;
-        pointer-events: none;
-        position: absolute;
-        inset: 0;
-        z-index: 10;
-      }
-      .blob-shape {
-        border-radius: 50% 50% 0 0;
-        background: linear-gradient(180deg, #3b82f6 0%, #a5cfff 100%);
-      }
+        html { overflow-x: clip; }
+        @supports not (overflow: clip) {
+            html { overflow-x: hidden; }
+        }
+
+        body {
+            transition: background-color 0.45s ease, color 0.45s ease;
+            background-color: #FDFBF9; 
+            color: #3B261D;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* iOS Safari momentum scroll on horizontal carousels */
+        .h-snap {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+            touch-action: pan-x pan-y;
+            scroll-behavior: smooth;
+        }
+        /* Center-snap "tug" — release auto-pulls active item to viewport center */
+        @media (max-width: 767px) {
+            [data-carousel] > * { scroll-snap-stop: always; }
+            /* Match actual padding to scroll-padding so first/last cards centre properly */
+            [data-carousel="odm"] {
+                scroll-padding-inline: 7vw;
+                padding-left: 7vw !important;
+                padding-right: 7vw !important;
+            }
+            [data-carousel="journal"] {
+                scroll-padding-inline: 9vw;
+                padding-left: 9vw !important;
+                padding-right: 9vw !important;
+            }
+            [data-carousel="workshops"] {
+                scroll-padding-inline: 11vw;
+                padding-left: 11vw !important;
+                padding-right: 11vw !important;
+            }
+            /* ODM card: stack title + badge so neither cuts off, equalise paragraph height */
+            [data-carousel="odm"] article > .flex {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.4rem;
+                margin-bottom: 1.1rem;
+            }
+            [data-carousel="odm"] article h3 {
+                font-size: 1.65rem;
+                line-height: 1.15;
+            }
+            [data-carousel="odm"] article p {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+            }
+        }
+
+        /* ───── ODM Scroll-story (desktop only) ───── */
+        @media (min-width: 768px) {
+            [data-carousel="odm"] article {
+                opacity: 0.42;
+                transition: opacity 0.7s cubic-bezier(0.25,1,0.35,1);
+            }
+            [data-carousel="odm"] article.is-active {
+                opacity: 1;
+            }
+            .odm-now {
+                margin-top: 2.25rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid rgba(59,38,29,0.14);
+            }
+            .odm-now-label {
+                font-size: 11px;
+                letter-spacing: 0.28em;
+                text-transform: uppercase;
+                opacity: 0.5;
+                font-weight: 500;
+                margin-bottom: 0.9rem;
+                display: block;
+            }
+            .odm-now-content {
+                transition: opacity 0.45s cubic-bezier(0.25,1,0.35,1), transform 0.45s cubic-bezier(0.25,1,0.35,1);
+            }
+            .odm-now-content.swap {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            .odm-now-roman {
+                font-family: var(--font-serif, 'Cormorant Garamond', serif);
+                color: #A64B2A;
+                font-size: 1.05rem;
+                letter-spacing: 0.05em;
+                margin-right: 0.5rem;
+            }
+            .odm-now-title {
+                font-family: var(--font-serif, 'Cormorant Garamond', serif);
+                font-size: 1.35rem;
+                line-height: 1.25;
+                color: inherit;
+                display: inline;
+            }
+            .odm-now-tagline {
+                font-size: 0.78rem;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                opacity: 0.55;
+                margin-top: 0.55rem;
+                display: block;
+            }
+            .odm-now-progress {
+                display: flex;
+                gap: 0.4rem;
+                margin-top: 1.1rem;
+            }
+            .odm-now-progress span {
+                width: 18px;
+                height: 1px;
+                background: rgba(59,38,29,0.2);
+                transition: background 0.5s ease, width 0.5s ease;
+            }
+            .odm-now-progress span.on {
+                background: #A64B2A;
+                width: 28px;
+            }
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+
+        .hero-img { transform: scale(1.15); }
+        .film-filter { filter: contrast(1.05) sepia(0.15) brightness(0.95); }
+
+        body.in-terracotta {
+            background-color: #A64B2A;
+            color: #F3EAE1;
+            --morph-target-color: #F3EAE1;
+        }
+        /* 橙色背景下，hover 變橙色會睇唔到 —
+           改為反向處理：hover 變深啡，與米色預設文字形成強烈對比，呼應品牌色階 */
+        body.in-terracotta .group:hover .group-hover\:text-brand-terracotta,
+        body.in-terracotta .hover\:text-brand-terracotta:hover {
+            color: #3B261D !important;
+        }
+        body.in-terracotta .hover\:border-brand-terracotta:hover {
+            border-color: #3B261D !important;
+        }
+        body.in-terracotta .group:hover .group-hover\:border-brand-terracotta {
+            border-color: #3B261D !important;
+        }
+        
+        #main-header {
+            color: #3B261D; 
+            transition: padding 0.4s var(--ease), background-color 0.4s ease, color 0.4s ease;
+        }
+        #main-header.is-scrolled {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            background-color: rgba(253, 251, 249, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        @media (max-width: 767px) {
+            #main-header.is-scrolled {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+        }
+        body.in-terracotta #main-header.is-scrolled { background-color: rgba(166, 75, 42, 0.95); }
+        body.in-brown #main-header.is-scrolled { background-color: rgba(59, 38, 29, 0.95); color: #F3EAE1; }
+
+        body.menu-open #main-header { 
+            background-color: transparent !important; 
+            color: #F3EAE1 !important; 
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        body.menu-open .line-1, body.menu-open .line-2 { background-color: #F3EAE1 !important; }
+
+        /* ───── Scroll Reveal ───── */
+        .ani-this { transition: transform 0.8s var(--ease), opacity 0.8s var(--ease); }
+        .ani-this.bottom-in { transform: translateY(40px); opacity: 0; }
+        .ani-this.left-in   { transform: translateX(-40px); opacity: 0; }
+        .ani-this.in { transform: translate(0, 0) !important; opacity: 1 !important; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .hover-scale-img { will-change: transform; }
+
+        .text-balance { text-wrap: balance; }
+
+        /* 隱藏 Scrollbar */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 純 CSS Morph */
+        .css-morph-container {
+            display: inline-flex;
+            position: relative;
+            vertical-align: bottom;
+        }
+
+        .css-morph-char {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.4em; 
+        }
+
+        .css-morph-top {
+            display: inline-block;
+            transform-origin: bottom;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.35, 1);
+            line-height: 1;
+        }
+
+        .css-morph-bottom {
+            position: absolute;
+            left: 0;
+            display: inline-block;
+            transform-origin: top;
+            transform: scaleY(0) translateY(-4%);
+            color: var(--morph-target-color, #A64B2A);
+            font-family: Baskervville, "Cactus Classical Serif", serif;
+            font-style: italic;
+            font-size: 1.25em;
+            line-height: 1;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.35, 1);
+        }
+
+        .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: scaleY(0); }
+        .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: scaleY(1) translateY(-4%); }
+
+        /* 觸控裝置上停用 hover morph，避免 tap 後仍卡住 */
+        @media (hover: none) {
+            .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: none; }
+            .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: scaleY(0) translateY(-4%); }
+        }
+
+
+        /* ─── Mobile-only refinements (DO NOT touch md+) ─── */
+        @media (max-width: 767px) {
+            /* 防止橫向溢出 */
+            body { overflow-x: hidden; }
+
+            /* 手機版 Hero - 維持比例但更克制留白 */
+            .hero-mobile-meta {
+                font-feature-settings: "kern" 1, "liga" 1;
+            }
+
+            /* 手機版 Carousel 進度指示器 */
+            .mobile-progress {
+                position: relative;
+                width: 56px;
+                height: 1px;
+                background: rgba(59, 38, 29, 0.15);
+                overflow: hidden;
+            }
+            body.in-brown .mobile-progress { background: rgba(243, 234, 225, 0.2); }
+            body.in-terracotta .mobile-progress { background: rgba(243, 234, 225, 0.25); }
+            .mobile-progress-fill {
+                position: absolute;
+                inset: 0;
+                background: #A64B2A;
+                transform-origin: left center;
+                transform: scaleX(0);
+                transition: transform 0.5s cubic-bezier(0.25, 1, 0.35, 1);
+            }
+
+            /* 手機 carousel slide hover-on-tap → focus-visible 視覺 */
+            .h-snap > *:active .hover-scale-img {
+                transform: scale(1.03);
+                transition: transform 0.4s ease-out;
+            }
+
+            /* 浮動 WhatsApp 在手機放大且更易按 */
+            .wa-float {
+                bottom: calc(1.25rem + var(--safe-bottom));
+            }
+        }
+
+        @media (min-width: 768px) {
+            #mobile-anchor-bar { display: none; }
+            .mobile-only-block { display: none !important; }
+        }
+
+        /* Pull‑indicator (僅手機 carousel 邊緣指示) */
+        .edge-fade-r {
+            background: linear-gradient(to left, rgba(253,251,249,1), rgba(253,251,249,0));
+        }
+        body.in-brown .edge-fade-r {
+            background: linear-gradient(to left, rgba(59,38,29,1), rgba(59,38,29,0));
+        }
+
+        /* 手機 Hero CTA tappable 強化 */
+        @media (max-width: 767px) {
+            .hero-cta-primary, .hero-cta-secondary {
+                min-height: 48px;
+                display: inline-flex;
+                align-items: center;
+            }
+        }
     </style>
-  </head>
-  <body class="bg-gray-50 text-brand-black font-sans antialiased relative">
-    <!-- 全局雜訊紋理 -->
-    <div class="bg-noise fixed"></div>
+</head>
+<body class="font-sans antialiased selection:bg-brand-terracotta selection:text-white">
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
-      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <!-- Logo -->
-        <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
-          <div
-            class="w-10 h-10 rounded-full bg-brand-blue flex items-center justify-center text-white font-serif italic font-bold text-xl">
-            Y
-          </div>
-          <span class="font-bold tracking-tight">OMHK</span>
+    <!-- 導航欄 -->
+    <nav id="main-header" class="fixed w-full z-[70] px-6 md:px-12 py-5 md:py-8 flex justify-between items-center border-b border-transparent">
+        <a href="#" class="js-stagger-morph font-serif text-xl md:text-2xl tracking-widest uppercase relative z-[70]">Scent.M</a>
+        
+        <div class="flex items-center gap-6 md:gap-10 relative z-[70]">
+            <div class="hidden md:flex items-center gap-5 text-current opacity-70">
+                <a href="#" aria-label="Instagram" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                    <i class="fa-brands fa-instagram text-[1.25rem]"></i>
+                </a>
+                <a href="#" aria-label="Facebook" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                    <i class="fa-brands fa-facebook-f text-[1.05rem] translate-y-[1px]"></i>
+                </a>
+                <a href="#" aria-label="YouTube" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                    <i class="fa-brands fa-youtube text-[1.35rem] translate-y-[1px]"></i>
+                </a>
+            </div>
+
+            <button id="menu-toggle" aria-label="開啟選單" class="uppercase tracking-[0.15em] text-sm md:text-base group flex items-center gap-3 md:gap-4 focus:outline-none">
+                <div class="hidden sm:block relative overflow-hidden h-[1.4em] w-[4em]">
+                    <div id="menu-text-wrap" class="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center">
+                        <span class="js-stagger-morph text-current font-medium">Menu</span>
+                    </div>
+                    <div id="close-text-wrap" class="absolute inset-x-0 top-full h-full transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center">
+                        <span class="js-stagger-morph text-current font-medium">Close</span>
+                    </div>
+                </div>
+
+                <div class="w-7 md:w-8 flex flex-col gap-[5px] justify-center items-center">
+                    <span class="line-1 block w-full h-[1px] bg-current transform origin-center transition-colors duration-300"></span>
+                    <span class="line-2 block w-full h-[1px] bg-current transform origin-center transition-colors duration-300"></span>
+                </div>
+            </button>
         </div>
-
-        <!-- Desktop Links -->
-        <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-brand-darkGray">
-          <a
-            href="#about"
-            onclick="navigateTo('about')"
-            class="hover:text-brand-blue transition-colors"
-            >關於我們</a
-          >
-          <a
-            href="#portfolio"
-            onclick="navigateTo('portfolio')"
-            class="hover:text-brand-blue transition-colors"
-            >參考案例</a
-          >
-          <a
-            href="#contact"
-            onclick="navigateTo('contact')"
-            class="hover:text-brand-blue transition-colors"
-            >獲取方案計劃書</a
-          >
-        </div>
-
-        <!-- CTA -->
-        <div class="hidden md:block">
-          <button
-            onclick="navigateTo('contact')"
-            class="bg-brand-blue text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-brand-blue-dark transition-colors shadow-lg shadow-blue-500/30">
-            聯絡我們
-          </button>
-        </div>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="md:hidden text-2xl text-brand-black">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-      </div>
     </nav>
 
-    <!-- MAIN CONTENT AREA -->
-    <main class="pt-24 pb-20 overflow-hidden min-h-screen">
-      <!-- ==================== HOME PAGE ==================== -->
-      <section id="page-home" class="page-view active max-w-7xl mx-auto px-6">
-        <!-- Hero -->
-        <div class="flex flex-col md:flex-row items-center justify-between py-16 md:py-24 gap-12">
-          <div class="md:w-1/2 space-y-6 z-20">
-            <h1
-              class="text-5xl md:text-6xl font-bold leading-tight tracking-tight text-brand-black">
-              我們以精準策略與實際執行<br />
-              <span class="text-brand-blue">協助品牌穩定成長</span>
-            </h1>
-            <p class="text-brand-darkGray text-lg max-w-lg">
-              Digital marketing with precise strategy. We provide data-driven solutions to help your
-              business thrive in the digital landscape.
-            </p>
-            <div class="flex gap-4 pt-4">
-              <button
-                onclick="navigateTo('contact')"
-                class="bg-brand-blue text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30">
-                獲取方案計劃書
-              </button>
-              <button
-                onclick="navigateTo('about')"
-                class="border border-gray-300 text-brand-black px-8 py-3 rounded-full font-semibold hover:bg-gray-50 transition-colors">
-                了解更多
-              </button>
-            </div>
-          </div>
-          <div class="md:w-1/2 relative flex justify-end w-full">
-            <!-- Hero Abstract Shape -->
-            <div
-              class="w-64 h-96 md:w-80 md:h-[500px] blob-shape relative overflow-hidden shadow-2xl">
-              <!-- Glassmorphism overlay card -->
-              <div
-                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4/5 h-3/5 bg-white/30 backdrop-blur-md border border-white/40 rounded-3xl shadow-glass"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pain Points -->
-        <div class="py-20 text-center">
-          <h2 class="text-3xl font-bold mb-12">你是否正面對以下問題？</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-10 rounded-3xl shadow-soft">
-              <div
-                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-200 to-orange-400 mb-6 mx-auto"></div>
-              <h3 class="font-bold text-lg mb-2">Website traffic but no leads</h3>
-              <p class="text-sm text-brand-darkGray">
-                High bounce rate and low conversion. Your visitors are leaving without taking
-                action.
-              </p>
-            </div>
-            <div class="bg-white p-10 rounded-3xl shadow-soft">
-              <div
-                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-200 to-yellow-400 flex items-center justify-center mb-6 mx-auto">
-                <div class="flex gap-1">
-                  <div class="w-2 h-2 rounded-full bg-white"></div>
-                  <div class="w-2 h-2 rounded-full bg-white"></div>
-                  <div class="w-2 h-2 rounded-full bg-white"></div>
+    <!-- 全螢幕選單 -->
+    <div id="fullscreen-menu" class="fixed inset-0 bg-[#111111] z-[60] flex flex-col justify-center px-6 md:px-12 invisible opacity-0 overflow-y-auto py-24">
+        <div class="max-w-screen-2xl mx-auto w-full flex flex-col gap-4 md:gap-8 text-brand-beige">
+            <div class="overflow-hidden pb-2"><a href="#odm" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Boutique ODM.</a></div>
+            <div class="overflow-hidden pb-2"><a href="#workshops" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Workshops.</a></div>
+            <div class="overflow-hidden pb-2"><a href="#services" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Services.</a></div>
+            <div class="overflow-hidden pb-2"><a href="#journal" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Journal.</a></div>
+            
+            <div class="overflow-hidden mt-6 md:mt-8">
+                <div class="menu-link flex items-center gap-6 opacity-70">
+                    <a href="#" aria-label="Instagram" class="flex items-center justify-center w-6 hover:text-brand-terracotta hover:opacity-100 transition-all duration-300"><i class="fa-brands fa-instagram text-[1.5rem]"></i></a>
+                    <a href="#" aria-label="Facebook" class="flex items-center justify-center w-6 hover:text-brand-terracotta hover:opacity-100 transition-all duration-300"><i class="fa-brands fa-facebook-f text-[1.2rem] translate-y-[1px]"></i></a>
+                    <a href="#" aria-label="YouTube" class="flex items-center justify-center w-6 hover:text-brand-terracotta hover:opacity-100 transition-all duration-300"><i class="fa-brands fa-youtube text-[1.6rem] translate-y-[1px]"></i></a>
                 </div>
-              </div>
-              <h3 class="font-bold text-lg mb-2">No Social Media strategy</h3>
-              <p class="text-sm text-brand-darkGray">
-                Inconsistent posting and low engagement. Brand presence is weakening.
-              </p>
             </div>
-            <div class="bg-white p-10 rounded-3xl shadow-soft">
-              <div
-                class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-300 to-blue-500 mb-6 mx-auto"></div>
-              <h3 class="font-bold text-lg mb-2">Decreasing marketing ROI</h3>
-              <p class="text-sm text-brand-darkGray">
-                Spending more on ads but getting less return. Targeting needs optimization.
-              </p>
+            <div class="overflow-hidden pb-2">
+                <a href="#hebe" class="menu-link inline-flex items-center gap-3 font-sans text-sm md:text-base tracking-[0.2em] uppercase opacity-70 hover:opacity-100 hover:text-brand-terracotta transition-all duration-300 mt-2">
+                    <span>Explore Hebe Lab</span>
+                    <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
             </div>
-          </div>
         </div>
+    </div>
 
-        <!-- Services -->
-        <div class="py-20">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">我們的服務</h2>
-            <a href="#" class="text-brand-blue font-semibold text-sm hover:underline"
-              >查看所有服務 →</a
-            >
-          </div>
-          <div class="flex flex-col md:flex-row gap-6 justify-center">
-            <div
-              class="bg-white p-10 rounded-[32px] shadow-soft flex-1 hover:-translate-y-2 transition-transform">
-              <div
-                class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center mb-16">
-                <i class="fa-solid fa-robot text-brand-darkGray"></i>
-              </div>
-              <h3 class="text-2xl font-bold mb-4">AI 聊天機器人</h3>
-              <p class="text-brand-darkGray text-sm">
-                提供全天候自動化客戶服務，提升轉化率與顧客滿意度。
-              </p>
-            </div>
-            <div
-              class="bg-brand-blue text-white p-10 rounded-[32px] shadow-soft flex-1 transform md:-translate-y-6">
-              <div
-                class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center mb-16">
-                <i class="fa-solid fa-chart-line"></i>
-              </div>
-              <h3 class="text-2xl font-bold mb-4">SEO 優化</h3>
-              <p class="text-blue-100 text-sm">
-                透過數據分析與關鍵字佈局，讓您的網站在搜尋引擎名列前茅。
-              </p>
-            </div>
-            <div
-              class="bg-white p-10 rounded-[32px] shadow-soft flex-1 hover:-translate-y-2 transition-transform">
-              <div
-                class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center mb-16">
-                <i class="fa-solid fa-pen-nib text-brand-darkGray"></i>
-              </div>
-              <h3 class="text-2xl font-bold mb-4">內容行銷</h3>
-              <p class="text-brand-darkGray text-sm">
-                打造具吸引力的品牌故事與社群內容，建立忠誠受眾。
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Why Choose Us (Plans) -->
-        <div class="py-20">
-          <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-2">為什麼選擇 Letitia?</h2>
-            <p class="text-brand-blue text-sm">提供不同階段的數碼方案，陪伴品牌成長。</p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Plan 1 -->
-            <div
-              class="bg-white p-10 rounded-[40px] shadow-soft border border-gray-100 flex flex-col transform hover:scale-105 transition-transform">
-              <h3 class="text-3xl font-bold text-center mb-10 text-brand-black">Phase 1</h3>
-              <ul class="space-y-5 text-sm text-brand-darkGray font-medium">
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
-                  <span>Suitable for startups</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
-                  <span>Basic SEO Setup</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
-                  <span>Content consultation</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check text-brand-blue mt-1"></i>
-                  <span>Analytics reports</span>
-                </li>
-              </ul>
-            </div>
-            <!-- Plan 2 -->
-            <div class="p-10 rounded-[40px] flex flex-col border border-gray-200 bg-gray-50/50">
-              <h3 class="text-3xl font-bold text-center mb-10 text-brand-blue-light">Phase 2</h3>
-              <ul class="space-y-5 text-sm text-gray-400 font-medium">
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check mt-1 opacity-50"></i>
-                  <span>Mid-sized growing companies</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check mt-1 opacity-50"></i> <span>SEO + Ads bundle</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <i class="fa-solid fa-check mt-1 opacity-50"></i>
-                  <span>Customization options</span>
-                </li>
-                <li class="flex items-start gap-4 opacity-50">
-                  <i class="fa-solid fa-xmark mt-1"></i> <span>Priority support</span>
-                </li>
-              </ul>
-            </div>
-            <!-- Plan 3 -->
-            <div class="p-10 rounded-[40px] flex flex-col border border-gray-200 bg-gray-50/50">
-              <h3 class="text-3xl font-bold text-center mb-10 text-brand-blue-light">Phase 3</h3>
-              <ul class="space-y-5 text-sm text-gray-400 font-medium">
-                <li class="flex items-start gap-4 opacity-50">
-                  <i class="fa-solid fa-xmark mt-1"></i> <span>Enterprise scale</span>
-                </li>
-                <li class="flex items-start gap-4 opacity-50">
-                  <i class="fa-solid fa-xmark mt-1"></i> <span>Full AI assistance</span>
-                </li>
-                <li class="flex items-start gap-4 opacity-50">
-                  <i class="fa-solid fa-xmark mt-1"></i> <span>Premium analytics</span>
-                </li>
-                <li class="flex items-start gap-4 opacity-50">
-                  <i class="fa-solid fa-xmark mt-1"></i> <span>24/7 support</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Case Study Preview -->
-        <div class="py-20 relative">
-          <!-- Decorative background blob -->
-          <div
-            class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-brand-blue-50 to-transparent -z-10 rounded-l-full"></div>
-
-          <div class="flex justify-between items-end mb-10">
-            <div>
-              <h2 class="text-3xl font-bold">案例研究</h2>
-              <p class="text-brand-darkGray mt-2">
-                Explore successful campaigns across various industries.
-              </p>
-            </div>
-            <button
-              onclick="navigateTo('portfolio')"
-              class="bg-brand-blue text-white px-6 py-2 rounded-full font-semibold text-sm">
-              所有案例 <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
-            </button>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div
-              class="bg-white rounded-3xl aspect-video shadow-sm border border-gray-100 cursor-pointer overflow-hidden group">
-              <div
-                class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
-            </div>
-            <div
-              class="bg-white rounded-3xl aspect-video shadow-sm border border-gray-100 cursor-pointer overflow-hidden group">
-              <div
-                class="w-full h-full bg-gradient-to-tr from-brand-blue-50 to-gray-200 group-hover:scale-105 transition-transform duration-500"></div>
-            </div>
-            <div
-              class="md:col-span-2 bg-white rounded-3xl aspect-[21/9] shadow-sm border border-gray-100 cursor-pointer overflow-hidden group">
-              <div
-                class="w-full h-full bg-gradient-to-r from-gray-100 via-blue-50 to-gray-100 group-hover:scale-105 transition-transform duration-500"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== ABOUT US PAGE ==================== -->
-      <section id="page-about" class="page-view max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row items-center justify-between py-16 gap-12">
-          <div class="md:w-1/2 space-y-6">
-            <h1 class="text-4xl md:text-5xl font-bold leading-tight">
-              我們將複雜的數碼行銷，<br />
-              轉化為 <span class="text-brand-blue">清晰、可執行的方案。</span>
-            </h1>
-            <p class="text-brand-darkGray text-lg max-w-md">
-              Digital marketing is complex. We simplify it. Through data analytics, creative
-              strategy, and precise execution, we build digital experiences that connect and
-              convert.
-            </p>
-            <button
-              onclick="navigateTo('contact')"
-              class="bg-brand-blue-light text-brand-black px-6 py-2 rounded-full font-bold text-sm hover:bg-blue-300 transition-colors">
-              聯絡我們的團隊
-            </button>
-          </div>
-          <div class="md:w-1/2 flex justify-end">
-            <!-- About Us Blob -->
-            <div
-              class="w-72 h-80 blob-shape bg-gradient-to-t from-gray-200 to-brand-blue shadow-lg border-4 border-white"></div>
-          </div>
-        </div>
-
-        <!-- Philosophy -->
-        <div class="py-16">
-          <h2 class="text-3xl font-bold mb-12">我們的理念</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-200 pt-12">
-            <div>
-              <i class="fa-solid fa-chess-knight text-2xl mb-4"></i>
-              <h3 class="font-bold text-xl mb-2">Strategy First</h3>
-              <p class="text-brand-darkGray text-sm">
-                We don't guess. We analyze market data to build a solid foundation.
-              </p>
-            </div>
-            <div>
-              <i class="fa-solid fa-bullseye text-2xl mb-4"></i>
-              <h3 class="font-bold text-xl mb-2">Design with Purpose</h3>
-              <p class="text-brand-darkGray text-sm">
-                Aesthetics meet functionality. Every design choice drives user action.
-              </p>
-            </div>
-            <div>
-              <i class="fa-solid fa-rocket text-2xl mb-4"></i>
-              <h3 class="font-bold text-xl mb-2">Execution that Delivers</h3>
-              <p class="text-brand-darkGray text-sm">
-                Flawless implementation, continuous monitoring, and agile adjustments.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Expertise -->
-        <div class="py-16 flex flex-col md:flex-row gap-12">
-          <div class="md:w-1/3">
-            <h2 class="text-3xl font-bold mb-4">專業領域</h2>
-            <p class="text-brand-darkGray">跨越不同平台與技術界限，為品牌提供全方位數碼支援。</p>
-          </div>
-          <div class="md:w-2/3 space-y-4">
-            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
-              <div
-                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
-                I
-              </div>
-              <div>
-                <h3 class="font-bold text-lg">AI 聊天機器人</h3>
-                <p class="text-sm text-brand-darkGray">自然語言處理、自動化客服流程、轉換率提升</p>
-              </div>
-            </div>
-            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
-              <div
-                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
-                II
-              </div>
-              <div>
-                <h3 class="font-bold text-lg">SEO 優化</h3>
-                <p class="text-sm text-brand-darkGray">技術性 SEO、內容行銷策略、在地化搜尋優化</p>
-              </div>
-            </div>
-            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
-              <div
-                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
-                III
-              </div>
-              <div>
-                <h3 class="font-bold text-lg">社群媒體經營</h3>
-                <p class="text-sm text-brand-darkGray">品牌視覺定調、社群互動企劃、廣告投放策略</p>
-              </div>
-            </div>
-            <div class="bg-brand-blue-50 p-6 rounded-2xl flex items-center gap-6">
-              <div
-                class="w-10 h-10 rounded-full border border-blue-200 flex items-center justify-center font-serif text-brand-blue">
-                IV
-              </div>
-              <div>
-                <h3 class="font-bold text-lg">公關與品牌行銷</h3>
-                <p class="text-sm text-brand-darkGray">媒體關係建立、危機處理、品牌活動策劃</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Team -->
-        <div class="py-20 relative">
-          <!-- Soft background glow -->
-          <div
-            class="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-blue-100 rounded-full filter blur-[100px] -z-10 opacity-50"></div>
-
-          <h2 class="text-3xl font-bold mb-12 text-center">團隊介紹</h2>
-
-          <!-- Highlight Member -->
-          <div
-            class="flex flex-col md:flex-row items-center gap-10 bg-white p-10 rounded-[40px] shadow-soft mb-12">
-            <div
-              class="w-48 h-48 md:w-64 md:h-64 rounded-3xl overflow-hidden bg-brand-blue relative">
-              <!-- Simulated portrait with CSS -->
-              <div
-                class="absolute inset-0 bg-gradient-to-tr from-brand-blue-dark to-brand-blue-light mix-blend-multiply"></div>
-              <i
-                class="fa-solid fa-user text-9xl text-white/50 absolute -bottom-10 left-1/2 -translate-x-1/2"></i>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-brand-blue tracking-widest uppercase mb-1">
-                Founder / CEO
-              </p>
-              <h3 class="text-4xl font-bold mb-4">Ruby</h3>
-              <p class="text-brand-darkGray leading-relaxed max-w-lg">
-                擁有超過十年數碼行銷經驗，專注於融合數據分析與創意策略。堅信科技是工具，而人與人之間的連結才是品牌長遠發展的核心。
-              </p>
-            </div>
-          </div>
-
-          <!-- Team List -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b-2 border-brand-black text-sm uppercase tracking-wider">
-                  <th class="pb-4 font-bold">Name</th>
-                  <th class="pb-4 font-bold">Role</th>
-                  <th class="pb-4 font-bold hidden md:table-cell">Email</th>
-                </tr>
-              </thead>
-              <tbody class="text-sm font-medium">
-                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td class="py-4">Jane McColvert</td>
-                  <td class="py-4 text-brand-darkGray">Director of Technology</td>
-                  <td class="py-4 text-brand-blue hidden md:table-cell">
-                    jane.mccolvert@letitia.void
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td class="py-4">Alex Chen</td>
-                  <td class="py-4 text-brand-darkGray">Head of SEO</td>
-                  <td class="py-4 text-brand-blue hidden md:table-cell">alex.chen@letitia.void</td>
-                </tr>
-                <tr class="border-b border-gray-100 hover:bg-bg-gray-50 transition-colors">
-                  <td class="py-4">Sarah Johnson</td>
-                  <td class="py-4 text-brand-darkGray">Lead Creative Designer</td>
-                  <td class="py-4 text-brand-blue hidden md:table-cell">sarah.j@letitia.void</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Bottom CTA -->
-        <div class="py-20 text-center">
-          <h2 class="text-4xl font-bold mb-6">一齊傾下，<br />你嘅品牌可以點樣成長</h2>
-          <button
-            onclick="navigateTo('contact')"
-            class="bg-brand-blue-light text-brand-black px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-300 transition-colors shadow-lg">
-            聯絡我們
-          </button>
-        </div>
-      </section>
-
-      <!-- ==================== PORTFOLIO PAGE ==================== -->
-      <section id="page-portfolio" class="page-view max-w-7xl mx-auto px-6">
-        <div class="py-16 text-center max-w-2xl mx-auto space-y-6">
-          <span
-            class="text-xs font-bold text-brand-blue tracking-widest uppercase border border-blue-200 bg-blue-50 px-3 py-1 rounded-full"
-            >Portfolio Showcase</span
-          >
-          <h1 class="text-4xl md:text-5xl font-bold">我們的作品與案例</h1>
-          <p class="text-brand-darkGray">
-            探索我們如何透過設計、數據與科技，為不同品牌創造價值與影響力。
-          </p>
-          <div class="flex justify-center gap-4 pt-4">
-            <button
-              class="bg-brand-blue-light text-brand-black px-6 py-2 rounded-full font-semibold text-sm">
-              所有作品
-            </button>
-            <button
-              class="border border-gray-300 text-brand-black px-6 py-2 rounded-full font-semibold text-sm hover:bg-gray-50">
-              Web/App
-            </button>
-          </div>
-        </div>
-
-        <!-- Abstract Images Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
-          <div
-            class="aspect-square rounded-3xl bg-gradient-to-tr from-orange-100 to-yellow-100 shadow-sm"></div>
-          <div
-            class="aspect-square rounded-3xl bg-gradient-to-br from-blue-100 to-purple-100 shadow-sm flex items-center justify-center">
-            <i class="fa-solid fa-sparkles text-white text-3xl opacity-50"></i>
-          </div>
-          <div
-            class="aspect-square rounded-3xl bg-gradient-to-bl from-blue-50 to-blue-200 shadow-sm relative overflow-hidden">
-            <div
-              class="absolute inset-0 bg-white/20 backdrop-blur-sm m-4 rounded-2xl border border-white/50"></div>
-          </div>
-          <div
-            class="aspect-square rounded-3xl bg-gradient-to-t from-teal-100 to-emerald-50 shadow-sm"></div>
-        </div>
-
-        <div class="text-center max-w-3xl mx-auto mb-20">
-          <h2 class="text-3xl md:text-4xl font-bold leading-tight">
-            每個項目都有不同目標，<br />我哋會因應品牌定位、資源及市場情況，<br />制定合適嘅數碼策略，而唔係一套公式走天下。
-          </h2>
-        </div>
-
-        <!-- Category: Website / AI -->
-        <div class="mb-20">
-          <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
-            <h2 class="text-2xl font-bold">網站/AI聊天機器人</h2>
-            <a
-              href="#"
-              onclick="navigateTo('case-study')"
-              class="text-brand-blue font-semibold text-sm hover:underline"
-              >查看詳情 →</a
-            >
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div onclick="navigateTo('case-study')" class="cursor-pointer group">
-              <div
-                class="bg-gray-100 aspect-video rounded-2xl mb-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
-                <i class="fa-solid fa-globe text-3xl text-gray-300"></i>
-              </div>
-              <h3 class="font-bold">TechCore 科技企業網站</h3>
-              <p class="text-sm text-brand-darkGray">Website / UXUI / 3D Animation</p>
-            </div>
-            <div class="cursor-pointer group">
-              <div
-                class="bg-gray-100 aspect-video rounded-2xl mb-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
-                <i class="fa-solid fa-robot text-3xl text-gray-300"></i>
-              </div>
-              <h3 class="font-bold">RetailX 智能客服 AI</h3>
-              <p class="text-sm text-brand-darkGray">Chatbot / E-commerce / Data Integration</p>
-            </div>
-            <div class="cursor-pointer group">
-              <div
-                class="bg-gray-100 aspect-video rounded-2xl mb-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
-                <i class="fa-solid fa-cart-shopping text-3xl text-gray-300"></i>
-              </div>
-              <h3 class="font-bold">Global Store 跨境網店</h3>
-              <p class="text-sm text-brand-darkGray">Shopify / SEO / Payment Gateway</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Category: SEO -->
-        <div class="mb-20">
-          <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
-            <h2 class="text-2xl font-bold">SEO優化</h2>
-            <a href="#" class="text-brand-blue font-semibold text-sm hover:underline">查看詳情 →</a>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div
-              class="bg-brand-blue-50 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-6">
-              <div
-                class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center shadow-sm shrink-0">
-                <i class="fa-solid fa-arrow-trend-up text-brand-blue text-2xl"></i>
-              </div>
-              <div>
-                <h3 class="font-bold text-lg mb-2">HealthPulse 流量翻倍計畫</h3>
-                <p class="text-sm text-brand-darkGray mb-4">
-                  透過深度內容營銷與技術架構優化，3個月內自然搜尋流量增長超過 150%。
+    <!-- 🌟 00. Hero Section -->
+    <header class="relative min-h-screen min-h-[100svh] pt-28 md:pt-32 pb-16 px-6 md:px-12 flex items-center">
+        <div class="max-w-screen-2xl mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-10 md:gap-20">
+            
+            <div class="w-full md:w-5/12 z-10 order-2 md:order-1">
+                <div class="overflow-hidden mb-5 md:mb-6">
+                    <span class="block font-sans text-xs sm:text-sm md:text-base tracking-[0.2em] font-medium uppercase text-brand-terracotta hero-fade-up opacity-0 translate-y-4">The Boutique Brand Partner</span>
+                </div>
+                <h1 class="font-serif text-[3.25rem] leading-[1.05] sm:text-6xl md:text-7xl xl:text-[5.5rem] md:leading-[1.05] tracking-tight text-brand-brown hero-text opacity-0 translate-y-8">
+                    Crafting <br>
+                    <span class="italic text-brand-terracotta font-light">Signatures.</span>
+                </h1>
+                
+                <p class="mt-6 md:mt-12 font-sans text-base sm:text-lg md:text-xl tracking-wider leading-[1.9] md:leading-loose text-brand-brown opacity-0 translate-y-4 hero-fade-up max-w-lg">
+                    捕捉無形，銘刻永恆。我們是獨立品牌背後的隱形推手，致力於為您的商業空間與高端產品，細膩訂製出深植人心的專屬氣味輪廓。
                 </p>
-                <div class="flex gap-2">
-                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
-                    >Content Marketing</span
-                  >
-                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
-                    >Local SEO</span
-                  >
+                
+                <div class="mt-10 md:mt-12 hero-fade-up opacity-0 translate-y-4">
+                    <a href="#odm" class="hero-cta-primary group inline-flex items-center gap-4 bg-transparent text-brand-brown uppercase tracking-widest text-sm md:text-lg pb-2 border-b border-brand-brown hover:text-brand-terracotta hover:border-brand-terracotta transition duration-500 whitespace-nowrap">
+                        <span class="js-stagger-morph text-current font-medium">品牌專屬方案</span>
+                        <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
                 </div>
-              </div>
             </div>
-            <div
-              class="bg-brand-blue-50 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-6">
-              <div
-                class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center shadow-sm shrink-0">
-                <i class="fa-solid fa-magnifying-glass-chart text-brand-blue text-2xl"></i>
-              </div>
-              <div>
-                <h3 class="font-bold text-lg mb-2">ZenRooms 佈局搜尋排名</h3>
-                <p class="text-sm text-brand-darkGray mb-4">
-                  針對高轉化關鍵字進行優化，成功搶佔多個核心字詞的首頁排名。
+
+            <div class="w-full md:w-6/12 h-[58svh] sm:h-[60vh] md:h-[80vh] relative rounded-sm overflow-hidden z-0 bg-[#E5D5C5] order-1 md:order-2">
+                <div class="parallax-wrapper absolute inset-0 w-full h-[120%] -top-[10%]">
+                    <img src="img/hero.png" class="hero-img absolute inset-0 w-full h-full object-cover filter contrast-105 sepia-[0.15] brightness-95" alt="Scent.M 品牌氛圍 - 光影下的自然氣息" loading="eager">
+                </div>
+                <div id="hero-mask" class="absolute inset-0 bg-[#FDFBF9] z-10 origin-bottom"></div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- 🌟 Brand Philosophy & Services Index -->
+    <section id="philosophy" class="pt-20 pb-24 md:pt-40 md:pb-48 px-6 md:px-12 max-w-screen-xl mx-auto text-center">
+        <span class="font-script text-[2.5rem] sm:text-4xl md:text-5xl lg:text-6xl text-brand-terracotta mb-6 md:mb-8 block ani-this bottom-in text-balance leading-tight">The Invisible Architecture of Scent and Memories</span>
+        
+        <h2 class="font-serif text-xl sm:text-2xl md:text-3xl lg:text-[2.25rem] leading-[1.7] md:leading-[1.8] tracking-wide text-brand-brown max-w-4xl mx-auto ani-this bottom-in delay-1 text-balance">
+            「香氣，是空間裡最無形的裝潢，也是品牌最深刻的語彙。我們深信，每一個用心經營的<span class="italic text-brand-terracotta">獨立品牌</span>，都值得擁有一抹讓人過鼻不忘的專屬記憶。透過細膩的調香工藝，我們將您的故事化作空氣中流動的藝術。」
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-16 mt-16 md:mt-32 max-w-5xl mx-auto text-left">
+            <a href="#odm" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ani-this bottom-in delay-2 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
+                <div class="flex justify-between items-end mb-3 md:mb-4">
+                    <span class="text-brand-terracotta font-serif text-xl md:text-2xl">01.</span>
+                    <span aria-hidden="true" class="block h-px w-8 bg-brand-brown/30 group-hover:bg-brand-terracotta group-hover:w-14 transition-all duration-500 mb-2"></span>
+                </div>
+                <h3 class="font-serif text-2xl md:text-3xl mb-2 text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">靈活代工</h3>
+                <p class="font-sans text-xs md:text-sm uppercase tracking-widest opacity-50 text-brand-brown">Boutique ODM</p>
+            </a>
+
+            <a href="#workshops" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ani-this bottom-in delay-3 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
+                <div class="flex justify-between items-end mb-3 md:mb-4">
+                    <span class="text-brand-terracotta font-serif text-xl md:text-2xl">02.</span>
+                    <span aria-hidden="true" class="block h-px w-8 bg-brand-brown/30 group-hover:bg-brand-terracotta group-hover:w-14 transition-all duration-500 mb-2"></span>
+                </div>
+                <h3 class="font-serif text-2xl md:text-3xl mb-2 text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">調香工藝體驗</h3>
+                <p class="font-sans text-xs md:text-sm uppercase tracking-widest opacity-50 text-brand-brown">Workshops</p>
+            </a>
+
+            <a href="#services" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ani-this bottom-in delay-4 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
+                <div class="flex justify-between items-end mb-3 md:mb-4">
+                    <span class="text-brand-terracotta font-serif text-xl md:text-2xl">03.</span>
+                    <span aria-hidden="true" class="block h-px w-8 bg-brand-brown/30 group-hover:bg-brand-terracotta group-hover:w-14 transition-all duration-500 mb-2"></span>
+                </div>
+                <h3 class="font-serif text-2xl md:text-3xl mb-2 text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">空間香氣營銷</h3>
+                <p class="font-sans text-xs md:text-sm uppercase tracking-widest opacity-50 text-brand-brown">Scent Marketing</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 🌟 01. Flexible ODM Solutions -->
+    <section id="odm" class="py-16 md:py-32 bg-white relative border-t border-brand-brown/10 scroll-mt-24">
+        <div class="px-6 md:px-12 max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-10 md:gap-24 items-start">
+            
+            <!-- Sticky Sidebar / Mobile Header -->
+            <div class="w-full md:w-1/3 md:sticky md:top-40 z-10 pt-2 md:pt-4">
+                <div class="flex md:block items-baseline justify-between md:justify-start gap-4">
+                    <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-0 md:mb-6 block ani-this bottom-in">01.</span>
+                    <span class="md:hidden font-sans text-[11px] tracking-[0.2em] uppercase opacity-50 ani-this bottom-in">04 Pillars</span>
+                </div>
+                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] md:leading-[1.2] mt-3 md:mt-0 ani-this bottom-in delay-1">
+                    靈活代工<br>
+                    <span class="italic text-brand-terracotta font-light">Boutique ODM</span>
+                </h2>
+                <p class="font-sans text-base md:text-lg mt-5 md:mt-8 opacity-80 leading-[1.9] md:leading-loose ani-this bottom-in delay-2">
+                    徹底打破傳統大廠的冰冷流水線。我們專為獨立品牌提供極具彈性的起訂量與深度客製化調香服務。從概念發想、配方研發到最終包裝生產，每個環節皆如藝術品般細膩打磨。
                 </p>
-                <div class="flex gap-2">
-                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
-                    >Keyword Strategy</span
-                  >
-                  <span class="text-xs bg-white px-2 py-1 rounded text-brand-darkGray"
-                    >Link Building</span
-                  >
+                
+                <div class="mt-7 md:mt-10 ani-this bottom-in delay-3 flex flex-col md:flex-col gap-5 md:gap-6">
+                    <a href="#" class="w-max group uppercase tracking-widest text-sm md:text-base border-b border-brand-brown pb-2 hover:text-brand-terracotta hover:border-brand-terracotta transition duration-500 font-medium">
+                        <span class="text-current">聯絡研發團隊</span>
+                    </a>
+                    
+                    <!-- 桌面：scroll-story now-viewing panel -->
+                    <div class="hidden md:block odm-now" id="odm-now" aria-live="polite">
+                        <span class="odm-now-label">Now Viewing</span>
+                        <div class="odm-now-content">
+                            <span class="odm-now-tagline" data-now="tagline">香調設計 · 小批量 EDP / EDT</span>
+                        </div>
+                        <div class="odm-now-progress" data-now="dots">
+                            <span class="on"></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+
+                    <!-- 手機 progress + swipe hint -->
+                    <div class="flex md:hidden items-center gap-4 opacity-70 mt-1" id="odm-progress-row">
+                        <div class="mobile-progress"><div class="mobile-progress-fill" data-progress="odm" style="transform: scaleX(0.25);"></div></div>
+                        <span class="font-sans text-[11px] tracking-[0.25em] uppercase font-medium" id="odm-progress-label">01 / 04</span>
+                        <span class="font-sans text-[11px] tracking-[0.25em] uppercase font-medium opacity-50 ml-auto">Swipe →</span>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+
+            <!-- Mobile Carousel / Desktop Stack -->
+            <div class="w-screen md:w-2/3 min-w-0 flex flex-row md:flex-col overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none hide-scrollbar h-snap gap-5 md:gap-16 lg:gap-24 -mx-6 px-6 md:mx-0 md:px-0 pb-2 md:pb-0" data-carousel="odm">
+                
+                <article class="shrink-0 w-[86vw] snap-center md:w-full md:snap-align-none group border-t border-brand-brown/10 pt-7 md:pt-10 ani-this bottom-in" data-idx="0" data-total="4" data-roman="I." data-title="Perfume" data-tagline="香調設計 · 小批量 EDP / EDT">
+                    <div class="flex justify-between items-baseline mb-5 md:mb-8 gap-4">
+                        <h3 class="font-serif text-[1.75rem] sm:text-3xl md:text-4xl group-hover:text-brand-terracotta transition-colors duration-500">I. Perfume</h3>
+                        <span class="font-sans text-[11px] sm:text-sm tracking-widest uppercase opacity-50 whitespace-nowrap">Bespoke Fragrance</span>
+                    </div>
+                    <div class="w-full aspect-[4/3] md:aspect-[21/9] rounded-sm overflow-hidden film-filter relative mb-5 md:mb-8 bg-[#E5D5C5]">
+                        <img src="img/odm-perfume.png" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Bespoke Perfume Bottle" loading="lazy">
+                    </div>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.85] md:leading-loose max-w-2xl text-balance">
+                        層次豐富的頂級調香工藝。我們提供小批量 EDP/EDT 專屬配方研發，從香調設計到瓶身選擇，助您打造極具辨識度與靈魂的核心香水線。
+                    </p>
+                </article>
+
+                <article class="shrink-0 w-[86vw] snap-center md:w-full md:snap-align-none group border-t border-brand-brown/10 pt-7 md:pt-10 ani-this bottom-in delay-1" data-idx="1" data-total="4" data-roman="II." data-title="Home Fragrance" data-tagline="蠟燭 · 擴香 · 空間噴霧">
+                    <div class="flex justify-between items-baseline mb-5 md:mb-8 gap-4">
+                        <h3 class="font-serif text-[1.75rem] sm:text-3xl md:text-4xl group-hover:text-brand-terracotta transition-colors duration-500">II. Home Fragrance</h3>
+                        <span class="font-sans text-[11px] sm:text-sm tracking-widest uppercase opacity-50 whitespace-nowrap">Ambient Scenting</span>
+                    </div>
+                    <div class="w-full aspect-[4/3] md:aspect-[21/9] rounded-sm overflow-hidden film-filter relative mb-5 md:mb-8 bg-[#E5D5C5]">
+                        <img src="https://images.unsplash.com/photo-1602928321679-560bb453f190?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Ambient Scenting Atmosphere" loading="lazy">
+                    </div>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.85] md:leading-loose max-w-2xl text-balance">
+                        從天然大豆蠟燭、高品質室內擴香到空間噴霧，我們將您的品牌專屬美學與氣味輪廓，完美延伸並融入客人的日常生活空間之中。
+                    </p>
+                </article>
+
+                <article class="shrink-0 w-[86vw] snap-center md:w-full md:snap-align-none group border-t border-brand-brown/10 pt-7 md:pt-10 ani-this bottom-in delay-2" data-idx="2" data-total="4" data-roman="III." data-title="Personal Care" data-tagline="洗沐 · 身體乳 · 護手霜">
+                    <div class="flex justify-between items-baseline mb-5 md:mb-8 gap-4">
+                        <h3 class="font-serif text-[1.75rem] sm:text-3xl md:text-4xl group-hover:text-brand-terracotta transition-colors duration-500">III. Personal Care</h3>
+                        <span class="font-sans text-[11px] sm:text-sm tracking-widest uppercase opacity-50 whitespace-nowrap">Skincare & Body</span>
+                    </div>
+                    <div class="w-full aspect-[4/3] md:aspect-[21/9] rounded-sm overflow-hidden film-filter relative mb-5 md:mb-8 bg-[#E5D5C5]">
+                        <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Personal Care Scent" loading="lazy">
+                    </div>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.85] md:leading-loose max-w-2xl text-balance">
+                        嚴選溫和低敏配方，提供洗沐用品、身體乳、護手霜等個人護理產品。將您的專屬香氣完美延伸，融入客人的日常保養儀式之中。
+                    </p>
+                </article>
+
+                <article class="shrink-0 w-[86vw] snap-center md:w-full md:snap-align-none group border-t border-brand-brown/10 pt-7 md:pt-10 ani-this bottom-in delay-3" data-idx="3" data-total="4" data-roman="IV." data-title="Pet Care" data-tagline="毛孩友善 · 溫和低敏配方">
+                    <div class="flex justify-between items-baseline mb-5 md:mb-8 gap-4">
+                        <h3 class="font-serif text-[1.75rem] sm:text-3xl md:text-4xl group-hover:text-brand-terracotta transition-colors duration-500">IV. Pet Care</h3>
+                        <span class="font-sans text-[11px] sm:text-sm tracking-widest uppercase opacity-50 whitespace-nowrap">Pet Friendly Formula</span>
+                    </div>
+                    <div class="w-full aspect-[4/3] md:aspect-[21/9] rounded-sm overflow-hidden film-filter relative mb-5 md:mb-8 bg-[#E5D5C5]">
+                        <img src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Pet Friendly Natural Concept" loading="lazy">
+                    </div>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.85] md:leading-loose max-w-2xl text-balance">
+                        專為毛孩研發的寵物友善配方。提供溫和且安全的天然香氣洗護產品，讓主子們也能享受猶如沙龍級的潔淨與呵護，同時守護牠們的敏銳嗅覺。
+                    </p>
+                </article>
+                
+            </div>
         </div>
-      </section>
+    </section>
 
-      <!-- ==================== CASE STUDY DETAILS PAGE ==================== -->
-      <section id="page-case-study" class="page-view max-w-7xl mx-auto px-6">
-        <div class="py-16 text-center border-b border-gray-200 mb-12 relative">
-          <!-- Background ambient glow -->
-          <div class="absolute inset-0 bg-gradient-to-b from-blue-50 to-transparent -z-10"></div>
-          <span class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-4 block"
-            >Case Study</span
-          >
-          <h1 class="text-5xl font-bold mb-8">網站/AI聊天機器人</h1>
-          <div class="w-16 h-1 bg-brand-blue mx-auto rounded-full"></div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-16 mb-20">
-          <div class="md:w-2/3 space-y-8">
-            <div>
-              <h3 class="text-xs font-bold text-brand-gray tracking-widest uppercase mb-4">
-                Project Details
-              </h3>
-              <p class="text-lg leading-relaxed text-brand-black font-medium">
-                We developed a comprehensive digital ecosystem for our client, integrating advanced
-                AI chatbot capabilities into a fluid, responsive web interface. The goal was to
-                bridge the gap between complex data processing and user-centric interaction,
-                creating a kinetic experience that feels both intelligent and intuitive.
-              </p>
-            </div>
-
-            <div class="space-y-6 pt-8">
-              <h3 class="text-xs font-bold text-brand-gray tracking-widest uppercase mb-4">
-                What We Do
-              </h3>
-
-              <div class="flex gap-4">
-                <i class="fa-solid fa-circle-check text-brand-blue mt-1"></i>
-                <div>
-                  <h4 class="font-bold mb-1">Website structure planning</h4>
-                  <p class="text-sm text-brand-darkGray">
-                    Architecting high-performance sitemaps for maximum retention.
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex gap-4">
-                <i class="fa-solid fa-circle-check text-brand-blue mt-1"></i>
-                <div>
-                  <h4 class="font-bold mb-1">UI/UX design</h4>
-                  <p class="text-sm text-brand-darkGray">
-                    Creating ethereal, glassmorphic interfaces optimized for motion.
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex gap-4">
-                <i class="fa-solid fa-circle-check text-brand-blue mt-1"></i>
-                <div>
-                  <h4 class="font-bold mb-1">SEO-friendly content structure</h4>
-                  <p class="text-sm text-brand-darkGray">
-                    Strategic keyword placement without compromising the brand feel.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Client Info Sidebar -->
-          <div class="md:w-1/3 space-y-8 bg-gray-50 p-8 rounded-3xl h-fit">
-            <div>
-              <h3 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-2">
-                Client
-              </h3>
-              <p class="font-bold">Brand Website & Digital Presence</p>
-            </div>
-            <div>
-              <h3 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-2">
-                Category
-              </h3>
-              <p class="font-bold">Website / SEO / UX</p>
-            </div>
-            <div>
-              <h3 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-2">
-                Timeline
-              </h3>
-              <p class="font-bold">12 Weeks • 2024</p>
-            </div>
-            <button
-              class="w-full bg-brand-blue-dark text-white py-3 rounded-xl font-bold shadow-md hover:bg-blue-800 transition-colors">
-              View Site
-            </button>
-          </div>
-        </div>
-
-        <!-- Image Grid Gallery -->
-        <div class="columns-1 md:columns-3 gap-4 space-y-4 mb-20">
-          <!-- Using varied aspect ratios and gradients to mimic the diverse textures in the design -->
-          <div
-            class="bg-gradient-to-br from-green-100 to-green-300 w-full aspect-square rounded-2xl"></div>
-          <div
-            class="bg-gradient-to-tr from-blue-200 to-teal-100 w-full aspect-video rounded-2xl"></div>
-          <div
-            class="bg-gradient-to-bl from-orange-200 to-yellow-100 w-full aspect-[3/4] rounded-2xl"></div>
-          <div
-            class="bg-gradient-to-t from-blue-400 to-cyan-200 w-full aspect-[4/3] rounded-2xl"></div>
-          <div
-            class="bg-gradient-to-b from-purple-100 to-pink-100 w-full aspect-square rounded-2xl"></div>
-          <div
-            class="bg-white border border-gray-200 w-full aspect-video rounded-2xl flex items-center justify-center overflow-hidden relative">
-            <!-- Dots pattern -->
-            <div
-              class="absolute w-10 h-10 bg-brand-blue rounded-full top-4 left-4 opacity-50"></div>
-            <div
-              class="absolute w-16 h-16 bg-brand-blue rounded-full bottom-4 right-10 opacity-60"></div>
-            <div
-              class="absolute w-8 h-8 bg-brand-blue rounded-full top-1/2 left-1/2 opacity-40"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== CONTACT US PAGE ==================== -->
-      <section id="page-contact" class="page-view max-w-7xl mx-auto px-6">
-        <!-- Hero Banner -->
-        <div
-          class="bg-gradient-to-br from-gray-500 to-brand-blue-dark rounded-[40px] p-10 md:p-16 text-white mb-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
-          <!-- Noise Overlay -->
-          <div class="absolute inset-0 bg-noise opacity-20"></div>
-
-          <div class="relative z-10 md:w-1/2 space-y-6">
-            <span
-              class="text-xs font-bold text-brand-black bg-white tracking-widest uppercase px-3 py-1 rounded-full"
-              >Portfolio Showcase</span
-            >
-            <h1 class="text-4xl md:text-5xl font-bold leading-tight">一齊傾下你嘅<br />項目需要</h1>
-            <p class="text-gray-200 max-w-sm text-sm leading-relaxed">
-              無論你係想改善網站、提升曝光，或者建立清晰嘅數碼策略，都歡迎同我哋聯絡。
-            </p>
-            <div class="flex gap-4 pt-4">
-              <button
-                class="bg-white text-brand-black px-6 py-2 rounded-full font-bold text-sm hover:bg-gray-100">
-                預約免費諮詢
-              </button>
-              <button
-                class="border border-white text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-white/10">
-                聯絡我們
-              </button>
-            </div>
-          </div>
-
-          <div class="relative z-10 md:w-1/2">
-            <div class="border-2 border-white/30 rounded-3xl p-10 backdrop-blur-sm relative">
-              <h2 class="text-4xl md:text-5xl font-serif font-bold italic leading-tight">
-                Your journey<br />
-                may be tough,<br />
-                but the<br />
-                destination will<br />
-                be worth it.
-              </h2>
-              <i class="fa-solid fa-sparkles absolute top-6 right-6 text-2xl text-yellow-300"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- Form & Info Section -->
-        <div class="bg-brand-blue-50 rounded-[40px] p-8 md:p-16 flex flex-col md:flex-row gap-12">
-          <!-- Left Info -->
-          <div class="md:w-1/2 space-y-10">
-            <div>
-              <h3 class="text-brand-blue font-bold text-sm mb-2">聯絡我們</h3>
-              <h2 class="text-4xl font-bold mb-4 text-brand-black">免費初步諮詢</h2>
-              <p class="text-brand-darkGray text-sm max-w-sm leading-relaxed">
-                我哋提供一次免費初步諮詢，了解你嘅業務背景、目標及目前狀況，並就可行方向提供專業建議，無任何合作承諾。
-              </p>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-6">
-              <div class="bg-white p-6 rounded-2xl shadow-sm flex-1">
-                <i class="fa-solid fa-location-dot text-brand-blue mb-4 text-xl"></i>
-                <h4 class="font-bold text-sm mb-1">Office Nebula</h4>
-                <p class="text-xs text-brand-darkGray">12 Space Drift St.<br />Tokyo, Japan</p>
-              </div>
-              <div class="bg-white p-6 rounded-2xl shadow-sm flex-1">
-                <i class="fa-solid fa-at text-brand-blue mb-4 text-xl"></i>
-                <h4 class="font-bold text-sm mb-1">Transmission</h4>
-                <p class="text-xs text-brand-darkGray">
-                  hello@letitia.void<br />+81 (0) 90-1234-5678
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <h3 class="text-brand-blue font-bold text-xs uppercase tracking-widest mb-4">
-                Social Waves
-              </h3>
-              <div class="flex gap-4">
-                <a
-                  href="#"
-                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-darkGray hover:text-brand-blue hover:border-brand-blue transition-colors"
-                  ><i class="fa-brands fa-instagram"></i
-                ></a>
-                <a
-                  href="#"
-                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-darkGray hover:text-brand-blue hover:border-brand-blue transition-colors"
-                  ><i class="fa-brands fa-x-twitter"></i
-                ></a>
-                <a
-                  href="#"
-                  class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-darkGray hover:text-brand-blue hover:border-brand-blue transition-colors"
-                  ><i class="fa-brands fa-facebook-f"></i
-                ></a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Form -->
-          <div class="md:w-1/2 bg-white rounded-3xl p-8 md:p-10 shadow-soft">
-            <form class="space-y-6">
-              <div>
-                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
-                  >姓名 Name</label
-                >
-                <input
-                  type="text"
-                  placeholder="您的姓名"
-                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
-                  >電子信箱 Email</label
-                >
-                <input
-                  type="email"
-                  placeholder="example@company.com"
-                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
-                  >主題 Subject</label
-                >
-                <select
-                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50 appearance-none">
-                  <option>選擇諮詢類型</option>
-                  <option>網站開發</option>
-                  <option>SEO 優化</option>
-                  <option>AI 聊天機器人</option>
-                  <option>其他</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-brand-darkGray mb-2 uppercase"
-                  >需求描述 Requirement</label
-                >
-                <textarea
-                  rows="4"
-                  placeholder="告訴我們您的目標與挑戰..."
-                  class="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue bg-gray-50 resize-none"></textarea>
-              </div>
-              <button
-                type="button"
-                class="w-full bg-brand-blue-light text-brand-black font-bold py-4 rounded-xl hover:bg-blue-300 transition-colors mt-4">
-                提交
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==================== POLICY PAGE ==================== -->
-      <section id="page-policy" class="page-view max-w-4xl mx-auto px-6 py-16">
-        <h1 class="text-5xl font-bold text-brand-blue-light mb-12">法律政策</h1>
-
-        <!-- Tabs -->
-        <div class="flex gap-8 border-b border-gray-200 mb-12">
-          <button class="pb-4 border-b-2 border-brand-black font-bold text-brand-black">
-            Privacy Policy
-          </button>
-          <button class="pb-4 font-semibold text-brand-darkGray hover:text-brand-black">
-            Terms of Service
-          </button>
-          <button class="pb-4 font-semibold text-brand-darkGray hover:text-brand-black">
-            Cookie Policy
-          </button>
-        </div>
-
-        <div class="flex justify-between items-center mb-8">
-          <h2 class="text-2xl font-bold">隱私權政策</h2>
-          <button class="bg-gray-100 text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-200">
-            <i class="fa-solid fa-download mr-2"></i>Download PDF
-          </button>
-        </div>
-
-        <p class="text-brand-darkGray mb-10 leading-relaxed">
-          At Letitia, we take your privacy seriously. This policy outlines how we collect, use, and
-          safeguard your personal information within our cyber-surreal digital universe. By
-          interacting with our interface, you consent to the data practices described in this
-          statement.
+    <!-- 🌟 Typographic Intermission -->
+    <section class="theme-switch py-24 md:py-48 px-6 md:px-12 bg-brand-brown text-center overflow-hidden flex flex-col justify-center items-center" data-switchto="brown">
+        <h2 class="font-serif text-[2.25rem] sm:text-5xl md:text-6xl lg:text-7xl leading-[1.25] md:leading-[1.3] italic font-light tracking-tight text-brand-beige ani-this bottom-in max-w-4xl mx-auto text-balance">
+            “Come and experience the profound artistry of our craft.”
+        </h2>
+        <p class="font-sans text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase opacity-60 text-brand-beige mt-7 md:mt-10 ani-this bottom-in delay-1 max-w-2xl text-balance">
+            Explore our immersive fragrance workshops and browse our exclusive retail collections.
         </p>
+    </section>
 
-        <div class="space-y-6">
-          <!-- Clause 1 -->
-          <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-xs text-brand-blue font-bold tracking-widest uppercase"
-                >database</span
-              >
-              <h3 class="text-lg font-bold">1. Information Collection</h3>
+    <!-- 🌟 02. Workshops -->
+    <section id="workshops" class="py-16 md:py-32 bg-[#FDFBF9] scroll-mt-24">
+        <div class="px-6 md:px-12 max-w-screen-2xl mx-auto mb-10 md:mb-16 flex flex-col md:flex-row md:justify-between md:items-end gap-5 md:gap-6">
+            <div>
+                <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-4 md:mb-6 block ani-this bottom-in">02.</span>
+                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] ani-this bottom-in delay-1">
+                    調香工藝體驗 <span class="italic text-brand-terracotta font-light">Workshops</span>
+                </h2>
+                <p class="font-sans text-base md:text-lg mt-5 md:mt-6 opacity-80 max-w-xl leading-[1.9] md:leading-loose ani-this bottom-in delay-2 text-balance">
+                    打造一個開放給大眾的感官實驗室。邀請您親身探索世界頂級香氛原料的奧秘，並在專業指導之下，親手調配出蘊含個人故事的專屬氣味。
+                </p>
             </div>
-            <p class="text-sm text-brand-darkGray mb-4">
-              We collect information that identifies, relates to, describes, or is reasonably
-              capable of being associated with you. This includes:
-            </p>
-            <ul class="list-disc pl-5 space-y-2 text-sm text-brand-darkGray">
-              <li>Neural interface signature and session metadata.</li>
-              <li>Contact details provided during portal registration.</li>
-              <li>Interaction logs within the surrealist design environments.</li>
-              <li>Automated device telemetry via our proprietary "Wave" analysis scripts.</li>
-            </ul>
-          </div>
-
-          <!-- Clause 2 -->
-          <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-xs text-brand-blue font-bold tracking-widest uppercase"
-                >security</span
-              >
-              <h3 class="text-lg font-bold">2. Data Security Protocols</h3>
+            <div class="flex items-center gap-6 mt-3 md:mt-0">
+                <div class="flex md:hidden items-center gap-4 opacity-70 ani-this bottom-in delay-3 w-full">
+                    <div class="mobile-progress"><div class="mobile-progress-fill" data-progress="workshops" style="transform: scaleX(0.2);"></div></div>
+                    <span class="font-sans text-[11px] tracking-[0.25em] uppercase font-medium" id="workshops-progress-label">01 / 05</span>
+                    <span class="font-sans text-[11px] tracking-[0.25em] uppercase font-medium opacity-50 ml-auto">Swipe →</span>
+                </div>
+                <div class="hidden md:flex items-center gap-3 opacity-50 ani-this bottom-in delay-3">
+                    <span class="font-sans text-sm tracking-[0.2em] uppercase font-medium">Swipe to explore</span>
+                    <i class="fa-solid fa-arrow-right-long text-lg"></i>
+                </div>
             </div>
-            <p class="text-sm text-brand-darkGray">
-              Your data is encrypted using quantum-resistant algorithms and stored across
-              decentralized nodes within our secure ecosystem. We maintain physical, electronic, and
-              procedural safeguards that comply with international cyber-security standards to
-              protect your surreal identity.
-            </p>
-          </div>
-
-          <!-- Clause 3 -->
-          <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="text-xs text-brand-blue font-bold tracking-widest uppercase">share</span>
-              <h3 class="text-lg font-bold">3. Third-Party Integration</h3>
-            </div>
-            <p class="text-sm text-brand-darkGray">
-              Letitia does not sell, rent, or lease its customer lists to third parties. To help
-              provide our services, we may share data with trusted partners who assist us in
-              operating our website, conducting our business, or serving our users, so long as those
-              parties agree to keep this information confidential.
-            </p>
-          </div>
         </div>
-      </section>
-    </main>
+
+        <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-snap gap-5 md:gap-8 pl-6 md:pl-12 pb-10 md:pb-12 pr-[12vw] md:pr-[20vw]" data-carousel="workshops">
+                    
+                    <div class="shrink-0 snap-center w-[78vw] sm:w-[60vw] md:w-[480px] ani-this left-in delay-1" data-idx="0" data-total="5">
+                        <a href="#" class="group block" draggable="false">
+                            <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                                <img src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Perfume Workshop Experience" draggable="false" loading="lazy">
+                            </div>
+                            <div class="flex flex-col gap-2 md:gap-3">
+                                <h3 class="font-serif text-2xl md:text-3xl group-hover:text-brand-terracotta transition-colors duration-500 leading-tight">個人香水調配體驗</h3>
+                                <p class="font-sans text-base md:text-lg opacity-70 leading-relaxed">探索超過 50 種珍稀香材，創造專屬氣息。</p>
+                                <p class="font-sans text-base md:text-lg font-bold mt-1 md:mt-2 text-brand-terracotta">$880 HKD</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="shrink-0 snap-center w-[78vw] sm:w-[60vw] md:w-[480px] ani-this left-in delay-2" data-idx="1" data-total="5">
+                        <a href="#" class="group block" draggable="false">
+                            <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                                <img src="https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Candle Workshop Atmosphere" draggable="false" loading="lazy">
+                            </div>
+                            <div class="flex flex-col gap-2 md:gap-3">
+                                <h3 class="font-serif text-2xl md:text-3xl group-hover:text-brand-terracotta transition-colors duration-500 leading-tight">香氛蠟燭手作空間</h3>
+                                <p class="font-sans text-base md:text-lg opacity-70 leading-relaxed">使用天然大豆蠟與精油，澆灌屬於你的空間溫度。</p>
+                                <p class="font-sans text-base md:text-lg font-bold mt-1 md:mt-2 text-brand-terracotta">$650 HKD</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="shrink-0 snap-center w-[78vw] sm:w-[60vw] md:w-[480px] ani-this left-in delay-3" data-idx="2" data-total="5">
+                        <a href="#" class="group block" draggable="false">
+                            <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                                <img src="https://images.unsplash.com/photo-1602928321679-560bb453f190?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Diffuser Workshop Art" draggable="false" loading="lazy">
+                            </div>
+                            <div class="flex flex-col gap-2 md:gap-3">
+                                <h3 class="font-serif text-2xl md:text-3xl group-hover:text-brand-terracotta transition-colors duration-500 leading-tight">室內擴香石藝術班</h3>
+                                <p class="font-sans text-base md:text-lg opacity-70 leading-relaxed">將石膏藝術與香氛結合，打造兼具美學與實用的擴香物件。</p>
+                                <p class="font-sans text-base md:text-lg font-bold mt-1 md:mt-2 text-brand-terracotta">$720 HKD</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="shrink-0 snap-center w-[78vw] sm:w-[60vw] md:w-[480px] ani-this left-in delay-4" data-idx="3" data-total="5">
+                        <a href="#" class="group block" draggable="false">
+                            <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                                <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1200&auto=format&fit=crop" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Aromatherapy & Meditation" draggable="false" loading="lazy">
+                            </div>
+                            <div class="flex flex-col gap-2 md:gap-3">
+                                <h3 class="font-serif text-2xl md:text-3xl group-hover:text-brand-terracotta transition-colors duration-500 leading-tight">芳療精油冥想研習</h3>
+                                <p class="font-sans text-base md:text-lg opacity-70 leading-relaxed">透過純植物精油的療癒力量，展開一場深度的自我對話。</p>
+                                <p class="font-sans text-base md:text-lg font-bold mt-1 md:mt-2 text-brand-terracotta">$580 HKD</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="shrink-0 snap-center w-[78vw] sm:w-[60vw] md:w-[480px] ani-this left-in delay-1 flex items-center justify-center border border-brand-brown/20 rounded-sm" data-idx="4" data-total="5">
+                        <a href="#" class="group flex flex-col items-center justify-center p-10 md:p-12 h-full w-full hover:bg-brand-brown/5 transition duration-500 text-center" draggable="false">
+                            <span class="font-serif text-2xl md:text-3xl mb-3 md:mb-4 text-brand-terracotta">Explore All</span>
+                            <p class="font-sans text-sm md:text-base tracking-widest opacity-60">查看完整課程時間表</p>
+                        </a>
+                    </div>
+        </div>
+    </section>
+
+    <!-- 🌟 03. Scent Marketing -->
+    <section id="services" class="py-16 md:py-32 px-6 md:px-12 max-w-screen-2xl mx-auto overflow-hidden border-t border-brand-brown/10 scroll-mt-24">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-center">
+            <div class="md:col-span-5 md:col-start-2 order-1">
+                <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-4 md:mb-6 block ani-this bottom-in">03.</span>
+                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl mb-6 md:mb-8 leading-[1.15] md:leading-[1.2] ani-this bottom-in delay-1">
+                    空間香氣營銷<br>
+                    <span class="italic text-brand-terracotta font-light">Scent Marketing</span>
+                </h2>
+                <p class="font-sans leading-[1.9] md:leading-loose text-base md:text-lg mb-8 md:mb-10 opacity-80 ani-this bottom-in delay-2 max-w-xl text-balance">
+                    專為 Boutique Hotel、獨立 Cafe 與高端零售空間，量身打造精準的氣味營銷方案。讓賓客在踏入店舖的瞬間，便被您專屬的品牌氣息包圍，創造出難以忘懷的沉浸式五感體驗。
+                </p>
+                <div class="ani-this bottom-in delay-3">
+                    <a href="#" class="group uppercase tracking-widest text-sm md:text-base border-b border-brand-brown pb-2 hover:text-brand-terracotta hover:border-brand-terracotta transition duration-500 font-medium">
+                        <span class="text-current">索取商業方案</span>
+                    </a>
+                </div>
+            </div>
+            <div class="md:col-span-5 md:col-start-8 ani-this bottom-in delay-2 mt-2 md:mt-0 order-2">
+                <div class="group w-full aspect-[4/5] rounded-sm overflow-hidden film-filter relative bg-[#E5D5C5]">
+                    <img src="img/marketing.png" class="hover-scale-img absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Scent Marketing Display" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [ IV ] Journal -->
+    <section id="journal" class="py-16 md:py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-t border-brand-brown/10 overflow-hidden scroll-mt-24">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-10 md:mb-16 gap-5 md:gap-0">
+            <div>
+                <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-4 md:mb-6 block ani-this bottom-in">04.</span>
+                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] ani-this bottom-in delay-1">
+                    品牌日誌 <span class="italic text-brand-terracotta font-light">Journal</span>
+                </h2>
+            </div>
+            <div class="flex items-center gap-6 mt-2 md:mt-0">
+                <div class="flex md:hidden items-center gap-4 opacity-70 ani-this bottom-in delay-2 w-full">
+                    <div class="mobile-progress"><div class="mobile-progress-fill" data-progress="journal" style="transform: scaleX(0.34);"></div></div>
+                    <span class="font-sans text-[11px] tracking-[0.25em] uppercase font-medium" id="journal-progress-label">01 / 03</span>
+                    <span class="font-sans text-[11px] tracking-[0.25em] uppercase font-medium opacity-50 ml-auto">Swipe →</span>
+                </div>
+                <div class="hidden md:block ani-this bottom-in delay-2">
+                    <a href="#" class="group uppercase font-sans tracking-widest text-base border-b border-brand-brown pb-2 hover:text-brand-terracotta hover:border-brand-terracotta transition duration-500 font-medium">
+                        <span class="text-current">閱讀所有文章</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-row md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none hide-scrollbar h-snap gap-5 md:gap-10 lg:gap-12 -mx-6 px-6 md:mx-0 md:px-0 pb-2 md:pb-0" data-carousel="journal">
+            
+            <article class="shrink-0 w-[82vw] snap-center md:w-auto md:snap-align-none group ani-this bottom-in delay-1" data-idx="0" data-total="3">
+                <a href="#" class="block">
+                    <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                        <img src="img/journal-1.png" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Woody Scent Story" loading="lazy">
+                    </div>
+                    <div class="flex justify-between items-center mb-3 md:mb-4">
+                        <span class="font-sans text-xs sm:text-sm tracking-[0.15em] uppercase opacity-60">Scent Story</span>
+                        <span class="font-serif text-sm md:text-base italic opacity-70">Oct 24, 2026</span>
+                    </div>
+                    <h3 class="font-serif text-2xl md:text-3xl leading-snug mb-3 md:mb-4 group-hover:text-brand-terracotta transition-colors duration-500">木質調的靈魂：雪松與檀香的對話</h3>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.8] md:leading-loose mb-4 md:mb-6 line-clamp-2">深入探索 Scent.M 最受歡迎的木質香調背後，調香師如何從雨後森林中汲取靈感，創造出平靜而深沉的氣味軌跡。</p>
+                </a>
+            </article>
+
+            <article class="shrink-0 w-[82vw] snap-center md:w-auto md:snap-align-none group ani-this bottom-in delay-2" data-idx="1" data-total="3">
+                <a href="#" class="block">
+                    <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                        <img src="img/journal-2.png" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="Art Exhibition Collaboration" loading="lazy">
+                    </div>
+                    <div class="flex justify-between items-center mb-3 md:mb-4">
+                        <span class="font-sans text-xs sm:text-sm tracking-[0.15em] uppercase opacity-60">Case Study</span>
+                        <span class="font-serif text-sm md:text-base italic opacity-70">Sep 12, 2026</span>
+                    </div>
+                    <h3 class="font-serif text-2xl md:text-3xl leading-snug mb-3 md:mb-4 group-hover:text-brand-terracotta transition-colors duration-500">香港藝術月：氣味聯乘展覽回顧</h3>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.8] md:leading-loose mb-4 md:mb-6 line-clamp-2">回顧上月我們為本地藝術展館打造的專屬空間香氣。了解香氣如何作為第五感，改變觀眾對視覺藝術的體驗與記憶。</p>
+                </a>
+            </article>
+
+            <article class="shrink-0 w-[82vw] snap-center md:w-auto md:snap-align-none group ani-this bottom-in delay-3" data-idx="2" data-total="3">
+                <a href="#" class="block">
+                    <div class="w-full aspect-[4/5] mb-5 md:mb-6 film-filter rounded-sm relative overflow-hidden bg-[#E5D5C5]">
+                        <img src="img/journal-3.png" class="hover-scale-img w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out" alt="VOGUE Press Feature" loading="lazy">
+                    </div>
+                    <div class="flex justify-between items-center mb-3 md:mb-4">
+                        <span class="font-sans text-xs sm:text-sm tracking-[0.15em] uppercase opacity-60">Press</span>
+                        <span class="font-serif text-sm md:text-base italic opacity-70">Aug 05, 2026</span>
+                    </div>
+                    <h3 class="font-serif text-2xl md:text-3xl leading-snug mb-3 md:mb-4 group-hover:text-brand-terracotta transition-colors duration-500">本地精品香氣專訪：重塑生態</h3>
+                    <p class="font-sans text-base md:text-lg opacity-70 leading-[1.8] md:leading-loose mb-4 md:mb-6 line-clamp-2">Scent.M 創辦人接受時尚雜誌專訪，暢談如何將國際級調香技術引入本地獨立品牌，推動香港 ODM 市場的高端化。</p>
+                </a>
+            </article>
+            
+        </div>
+
+    </section>
+
+    <!-- Hebe Lab CTA -->
+    <section id="hebe" class="theme-switch py-24 md:py-40 px-6 text-center overflow-hidden transition-colors duration-500 scroll-mt-24" data-switchto="terracotta">
+        <div class="max-w-3xl mx-auto">
+            <span class="font-script text-[3rem] sm:text-5xl md:text-7xl mb-4 md:mb-6 block opacity-90 ani-this bottom-in leading-tight">Our In-house Brand</span>
+            <h2 class="font-serif text-[3rem] sm:text-5xl md:text-7xl mb-9 md:mb-12 tracking-wide ani-this bottom-in delay-1 leading-tight">
+                Hebe Lab
+            </h2>
+            <div class="ani-this bottom-in delay-2">
+                <a href="#" class="group inline-block border border-current py-3.5 md:py-4 px-8 md:px-10 uppercase font-sans tracking-widest text-sm md:text-lg hover:bg-[#FDFBF9] hover:text-brand-terracotta transition duration-500">
+                    <span class="js-stagger-morph text-current font-medium">Explore Store</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 pt-16 pb-8">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
-          <!-- Brand -->
-          <div class="md:w-1/3">
-            <div class="flex items-center gap-2 mb-6">
-              <div
-                class="w-8 h-8 rounded-full bg-brand-black flex items-center justify-center text-white font-serif italic font-bold text-sm">
-                Y
-              </div>
-              <span class="font-bold tracking-tight text-lg">OMHK</span>
+    <footer class="py-14 md:py-24 px-6 md:px-12 border-t border-current transition-colors">
+        <div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+            <div class="md:col-span-5 ani-this bottom-in">
+                <h3 class="font-serif text-3xl md:text-4xl mb-5 md:mb-8 inline-block">Scent.M</h3>
+                <p class="font-sans text-base md:text-lg leading-[1.85] md:leading-loose opacity-80 max-w-md mb-6 md:mb-8">
+                    Scent.M 作為獨立品牌背後的推手，提供專業空間香氣營銷與精緻 ODM 代工服務。我們透過頂級調香工藝，為您的品牌空間與產品注入獨特靈魂。
+                </p>
             </div>
-            <p class="text-brand-darkGray text-sm max-w-xs leading-relaxed">
-              Defining the new frontier of market consciousness through advanced neural analytics.
-            </p>
-          </div>
+            
+            <div class="md:col-span-3 md:col-start-7 ani-this bottom-in delay-1">
+                <h4 class="font-sans uppercase tracking-[0.15em] text-sm md:text-base opacity-60 mb-5 md:mb-8 font-medium">導航 Navigation</h4>
+                <ul class="font-sans space-y-4 md:space-y-5 text-base md:text-lg flex flex-col items-start">
+                    <li><a href="#" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">關於我們 About</a></li>
+                    <li><a href="#odm" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">靈活代工 ODM</a></li>
+                    <li><a href="#workshops" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">調香工藝體驗 Workshops</a></li>
+                    <li><a href="#services" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">香氣營銷 Scent Marketing</a></li>
+                    <li><a href="#hebe" class="inline-block hover:text-brand-terracotta transition-colors duration-300 font-medium">Hebe Lab 官方網站 &rarr;</a></li>
+                </ul>
+            </div>
 
-          <!-- Links -->
-          <div class="flex gap-16">
-            <div>
-              <h4 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-6">
-                Structure
-              </h4>
-              <ul class="space-y-4 text-sm font-semibold text-brand-darkGray">
-                <li>
-                  <a href="#about" onclick="navigateTo('about')" class="hover:text-brand-black"
-                    >關於我們</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#portfolio"
-                    onclick="navigateTo('portfolio')"
-                    class="hover:text-brand-black"
-                    >參考案例</a
-                  >
-                </li>
-                <li>
-                  <a href="#policy" onclick="navigateTo('policy')" class="hover:text-brand-black"
-                    >條款與細則</a
-                  >
-                </li>
-              </ul>
+            <div class="md:col-span-2 md:col-start-11 ani-this bottom-in delay-2">
+                <h4 class="font-sans uppercase tracking-[0.15em] text-sm md:text-base opacity-60 mb-5 md:mb-8 font-medium">社群 Social</h4>
+                <div class="flex items-center gap-5 text-current opacity-70">
+                    <a href="#" aria-label="Instagram" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                        <i class="fa-brands fa-instagram text-[1.25rem]"></i>
+                    </a>
+                    <a href="#" aria-label="Facebook" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                        <i class="fa-brands fa-facebook-f text-[1.05rem] translate-y-[1px]"></i>
+                    </a>
+                    <a href="#" aria-label="YouTube" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                        <i class="fa-brands fa-youtube text-[1.35rem] translate-y-[1px]"></i>
+                    </a>
+                </div>
             </div>
-            <div>
-              <h4 class="text-xs font-bold text-brand-blue tracking-widest uppercase mb-6">
-                Signals
-              </h4>
-              <div class="flex gap-4">
-                <a href="#" class="text-brand-darkGray hover:text-brand-black text-xl"
-                  ><i class="fa-brands fa-instagram"></i
-                ></a>
-                <a href="#" class="text-brand-darkGray hover:text-brand-black text-xl"
-                  ><i class="fa-brands fa-x-twitter"></i
-                ></a>
-                <a href="#" class="text-brand-darkGray hover:text-brand-black text-xl"
-                  ><i class="fa-brands fa-facebook-f"></i
-                ></a>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <div class="border-t border-gray-100 pt-8 text-xs text-gray-400 uppercase tracking-widest">
-          © 2024 ONLINE MARKETING HK. ETHEREAL PRESENCE SECURED.
-        </div>
-      </div>
     </footer>
 
-    <!-- JavaScript for SPA Routing -->
+    <!-- 浮動 WhatsApp 按鈕 -->
+    <a href="https://wa.me/85212345678?text=你好，想了解更多關於香氣營銷/代工的服務！" target="_blank" rel="noopener noreferrer" 
+       aria-label="WhatsApp 查詢"
+       class="wa-float fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[50] group flex items-center bg-[#FDFBF9] border border-brand-brown/20 shadow-[0_4px_20px_rgba(59,38,29,0.08)] hover:border-brand-terracotta hover:shadow-[0_4px_20px_rgba(166,75,42,0.15)] rounded-full overflow-hidden transition-all duration-500">
+        <div class="max-w-0 group-hover:max-w-xs overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center opacity-0 group-hover:opacity-100">
+            <span class="font-sans text-xs md:text-sm tracking-[0.15em] uppercase font-medium text-brand-terracotta whitespace-nowrap pl-5 md:pl-6">
+                Bespoke Inquiry
+            </span>
+        </div>
+        <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">
+            <i class="fa-brands fa-whatsapp text-2xl md:text-[1.75rem]"></i>
+        </div>
+    </a>
+
     <script>
-      function navigateTo(pageId) {
-        // Hide all pages
-        const pages = document.querySelectorAll(".page-view");
-        pages.forEach((page) => {
-          page.classList.remove("active");
+        gsap.registerPlugin(ScrollTrigger);
+
+        const isTouch = window.matchMedia('(hover: none)').matches;
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+        const lenis = new Lenis({
+            duration: isMobile ? 0.9 : 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothTouch: false, // 讓手機橫向 carousel 自然
+        });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+        lenis.on('scroll', ScrollTrigger.update);
+
+        function setupPureCSSMorph() {
+            const morphEls = document.querySelectorAll('.js-stagger-morph');
+            
+            morphEls.forEach(el => {
+                if(el.dataset.morphBound === "true") return;
+                el.dataset.morphBound = "true";
+
+                const text = el.innerText.trim();
+                el.innerHTML = '';
+                el.classList.add('css-morph-container');
+
+                const chars = text.split('');
+                chars.forEach((char, index) => {
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'css-morph-char';
+
+                    const delay = (index * 0.02) + 's';
+
+                    const topSpan = document.createElement('span');
+                    topSpan.className = 'css-morph-top';
+                    topSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
+                    topSpan.style.transitionDelay = delay;
+
+                    const bottomSpan = document.createElement('span');
+                    bottomSpan.className = 'css-morph-bottom';
+                    bottomSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
+                    bottomSpan.style.transitionDelay = `calc(${delay} + 0.05s)`;
+
+                    wrapper.appendChild(topSpan);
+                    wrapper.appendChild(bottomSpan);
+                    el.appendChild(wrapper);
+                });
+            });
+        }
+        setupPureCSSMorph();
+
+        const heroTl = gsap.timeline();
+        heroTl.to('#hero-mask', { scaleY: 0, duration: 1.5, ease: 'expo.inOut' })
+              .to('.hero-img', { scale: 1, duration: 2, ease: 'expo.out' }, "-=1.5")
+              .to('.hero-text', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, "-=1.0")
+              .to('.hero-fade-up', { opacity: 1, y: 0, duration: 1.0, stagger: 0.2, ease: 'power2.out' }, "-=0.8");
+
+        const header = document.querySelector('#main-header');
+        const menuToggle = document.getElementById('menu-toggle');
+        const fullscreenMenu = document.getElementById('fullscreen-menu');
+        
+        gsap.set('.menu-link', { yPercent: 100, opacity: 0 });
+
+        if (menuToggle && fullscreenMenu) {
+            const menuTextWrap = document.getElementById('menu-text-wrap');
+            const closeTextWrap = document.getElementById('close-text-wrap');
+            const line1 = menuToggle.querySelector('.line-1');
+            const line2 = menuToggle.querySelector('.line-2');
+            let isMenuOpen = false;
+            let isAnimating = false; 
+
+            menuToggle.addEventListener('click', () => {
+                if (isAnimating) return;
+                isAnimating = true;
+                setTimeout(() => { isAnimating = false; }, 500);
+
+                isMenuOpen = !isMenuOpen;
+                menuToggle.setAttribute('aria-label', isMenuOpen ? '關閉選單' : '開啟選單');
+                if (isMenuOpen) {
+                    document.body.classList.add('menu-open');
+                    
+                    if(menuTextWrap) menuTextWrap.style.transform = 'translateY(-100%)';
+                    if(closeTextWrap) closeTextWrap.style.transform = 'translateY(-100%)';
+                    
+                    gsap.to(fullscreenMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+                    gsap.to('.menu-link', { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power4.out', delay: 0.2 });
+                    
+                    if (line1) gsap.to(line1, { y: 3, rotation: -45, duration: 0.3 });
+                    if (line2) gsap.to(line2, { y: -3, rotation: 45, duration: 0.3 });
+                    
+                    lenis.stop();
+                } else {
+                    document.body.classList.remove('menu-open');
+                    
+                    if(menuTextWrap) menuTextWrap.style.transform = 'translateY(0)';
+                    if(closeTextWrap) closeTextWrap.style.transform = 'translateY(0)';
+                    
+                    gsap.to('.menu-link', { yPercent: 100, opacity: 0, duration: 0.4, ease: 'power3.in' });
+                    gsap.to(fullscreenMenu, { autoAlpha: 0, duration: 0.4, ease: "power2.in", delay: 0.2 });
+                    
+                    if (line1) gsap.to(line1, { y: 0, rotation: 0, duration: 0.3 });
+                    if (line2) gsap.to(line2, { y: 0, rotation: 0, duration: 0.3 });
+                    
+                    lenis.start();
+                }
+            });
+
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (isMenuOpen) menuToggle.click();
+                });
+            });
+        }
+
+        lenis.on('scroll', (e) => {
+            if (window.scrollY > 50) {
+                header.classList.add('is-scrolled');
+            } else {
+                header.classList.remove('is-scrolled');
+            }
         });
 
-        // Show selected page
-        const targetPage = document.getElementById("page-" + pageId);
-        if (targetPage) {
-          targetPage.classList.add("active");
-          // Scroll to top
-          window.scrollTo({ top: 0, behavior: "smooth" });
+        function setupAniThis() {
+            gsap.utils.toArray('.ani-this').forEach(item => {
+                ScrollTrigger.create({
+                    trigger: item,
+                    once: true,
+                    start: "top 88%",
+                    onEnter: () => item.classList.add('in')
+                });
+            });
+        }
+        setTimeout(setupAniThis, 100);
+
+        const THEME_CLASSES = ['in-terracotta', 'in-brown', 'in-moss'];
+
+        function applyTheme(kind) {
+            THEME_CLASSES.forEach(c => {
+                if (c !== `in-${kind}`) document.body.classList.remove(c);
+            });
+            document.body.classList.add(`in-${kind}`);
+        }
+        function clearTheme() {
+            THEME_CLASSES.forEach(c => document.body.classList.remove(c));
         }
 
-        // Update URL Hash without jumping
-        history.pushState(null, null, "#" + pageId);
-      }
+        gsap.utils.toArray('.theme-switch').forEach(item => {
+            const target = item.dataset.switchto;
+            ScrollTrigger.create({
+                trigger: item,
+                start: 'top center+=20%', end: 'bottom top',
+                onEnter: () => applyTheme(target), onEnterBack: () => applyTheme(target),
+                onLeave: () => clearTheme(), onLeaveBack: () => clearTheme(),
+            });
+        });
 
-      // Handle initial load based on URL hash
-      window.addEventListener("DOMContentLoaded", () => {
-        const hash = window.location.hash.substring(1);
-        if (hash && document.getElementById("page-" + hash)) {
-          navigateTo(hash);
+        const heroBgWrapper = document.querySelector('.parallax-wrapper');
+        if (heroBgWrapper && !isMobile) {
+            gsap.to(heroBgWrapper, {
+                yPercent: 15,
+                ease: 'none',
+                scrollTrigger: { trigger: "header", start: 'top top', end: 'bottom top', scrub: true }
+            });
         }
-      });
+
+        // (Workshops now uses native scroll-snap, see bindScrollProgress below)
+
+        // ─────────── Native scroll progress (ODM + Journal) ───────────
+        function bindScrollProgress(carouselEl, progressFill, progressLabel) {
+            if (!carouselEl) return;
+            const items = carouselEl.querySelectorAll('[data-idx]');
+            const total = items.length;
+            if (!total) return;
+
+            let raf = null;
+            const update = () => {
+                raf = null;
+                const rect = carouselEl.getBoundingClientRect();
+                const center = rect.left + rect.width / 2;
+                let bestIdx = 0;
+                let bestDist = Infinity;
+                items.forEach((it, i) => {
+                    const r = it.getBoundingClientRect();
+                    const c = r.left + r.width / 2;
+                    const d = Math.abs(c - center);
+                    if (d < bestDist) { bestDist = d; bestIdx = i; }
+                });
+                if (progressFill) progressFill.style.transform = `scaleX(${(bestIdx + 1) / total})`;
+                if (progressLabel) progressLabel.textContent = `${String(bestIdx + 1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+            };
+            const onScroll = () => {
+                if (raf) return;
+                raf = requestAnimationFrame(update);
+            };
+            carouselEl.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            update();
+        }
+
+        bindScrollProgress(
+            document.querySelector('[data-carousel="odm"]'),
+            document.querySelector('[data-progress="odm"]'),
+            document.getElementById('odm-progress-label')
+        );
+        bindScrollProgress(
+            document.querySelector('[data-carousel="workshops"]'),
+            document.querySelector('[data-progress="workshops"]'),
+            document.getElementById('workshops-progress-label')
+        );
+        bindScrollProgress(
+            document.querySelector('[data-carousel="journal"]'),
+            document.querySelector('[data-progress="journal"]'),
+            document.getElementById('journal-progress-label')
+        );
+
+        // ─────────── Smooth anchor scroll w/ Lenis ───────────
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const href = a.getAttribute('href');
+                if (!href || href === '#' || href.length < 2) return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                const offset = isMobile ? -56 : -32;
+                lenis.scrollTo(target, { offset });
+            });
+        });
+
+        // ─────────── Section snap with elastic pull (full-section commitment) ───────────
+        // Scroll 停低嗰刻：自動將最近 section 拉到 full viewport，帶輕微回彈
+        (function() {
+            const snapTargets = Array.from(document.querySelectorAll(
+                '#philosophy, #workshops, #services, #journal, #hebe'
+            )).filter(Boolean);
+            if (!snapTargets.length) return;
+            if (isMobile) return; // Mobile viewport too small — disable auto-snap to avoid hiding section content
+
+            const headerOffset = isMobile ? 56 : 32;
+            let idleTimer = null;
+            let snapping = false;
+
+            const cancelSnap = () => {
+                clearTimeout(idleTimer);
+                if (snapping) {
+                    lenis.stop();
+                    lenis.start();
+                    snapping = false;
+                }
+            };
+            window.addEventListener('wheel',     cancelSnap, { passive: true });
+            window.addEventListener('touchmove', cancelSnap, { passive: true });
+            window.addEventListener('keydown', (e) => {
+                if (['PageDown','PageUp','ArrowDown','ArrowUp','Home','End',' '].includes(e.key)) cancelSnap();
+            });
+
+            // Soft ease-out (gentle nudge, no bounce)
+            const easeSoft = (t) => 1 - Math.pow(1 - t, 4);
+
+            lenis.on('scroll', () => {
+                if (snapping) return;
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(() => {
+                    if (document.body.classList.contains('menu-open')) return;
+                    const vh = window.innerHeight;
+                    let best = null;
+                    let bestDist = Infinity;
+                    snapTargets.forEach(s => {
+                        const rect = s.getBoundingClientRect();
+                        // 只要 section 部分喺 viewport 入面就考慮
+                        if (rect.bottom < 0 || rect.top > vh) return;
+                        const isLast = (s.id === 'hebe');
+                        const fits = rect.height <= vh - headerOffset;
+                        // Hebe Lab（最後一個）：頂部完全貼齊 viewport 頂，唔留位畀 Journal 入鏡
+                        // 其餘：細過 viewport 就 center；高過就 top + headerOffset
+                        let snapOffset;
+                        if (isLast) {
+                            snapOffset = 0;
+                        } else if (fits) {
+                            snapOffset = -(vh - rect.height) / 2;
+                        } else {
+                            snapOffset = -headerOffset;
+                        }
+                        const targetY = rect.top + snapOffset;
+                        const dist = Math.abs(targetY);
+                        if (dist < bestDist) {
+                            bestDist = dist;
+                            best = s;
+                            best.__snapOffset = snapOffset;
+                        }
+                    });
+                    if (best && bestDist > 4 && bestDist < vh * 0.5) {
+                        snapping = true;
+                        lenis.scrollTo(best, {
+                            offset: best.__snapOffset,
+                            duration: 1.4,
+                            easing: easeSoft,
+                            onComplete: () => { snapping = false; }
+                        });
+                    }
+                }, 70);
+            });
+        })();
+
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); }, 200);
+        });
+
+        // ─────────── Desktop mouse drag-to-scroll for horizontal carousels ───────────
+        (function() {
+            if (window.matchMedia('(max-width: 767px)').matches) return;
+            const containers = document.querySelectorAll('[data-carousel="workshops"]');
+            containers.forEach(el => {
+                let isDown = false, startX = 0, startScroll = 0, moved = false;
+                el.style.cursor = 'grab';
+                el.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    isDown = true; moved = false;
+                    startX = e.pageX; startScroll = el.scrollLeft;
+                    el.style.cursor = 'grabbing';
+                    el.style.scrollSnapType = 'none';
+                    e.preventDefault();
+                });
+                window.addEventListener('mouseup', () => {
+                    if (!isDown) return;
+                    isDown = false;
+                    el.style.cursor = 'grab';
+                    el.style.scrollSnapType = '';
+                });
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    const dx = (e.pageX - startX) * 2.5;
+                    if (Math.abs(dx) > 4) moved = true;
+                    el.scrollLeft = startScroll - dx;
+                });
+                el.addEventListener('click', (e) => {
+                    if (moved) { e.preventDefault(); e.stopPropagation(); }
+                }, true);
+            });
+        })();
+
+        // ───────── ODM Scroll-story (desktop only) ─────────
+        (function() {
+            if (window.matchMedia('(max-width: 767px)').matches) return;
+            const cards = document.querySelectorAll('[data-carousel="odm"] article');
+            const panel = document.getElementById('odm-now');
+            if (!cards.length || !panel) return;
+            const content = panel.querySelector('.odm-now-content');
+            const elTag   = panel.querySelector('[data-now="tagline"]');
+            const dots    = panel.querySelectorAll('[data-now="dots"] span');
+            let activeIdx = -1;
+
+            const setActive = (idx) => {
+                if (idx === activeIdx) return;
+                activeIdx = idx;
+                cards.forEach((c, i) => c.classList.toggle('is-active', i === idx));
+                dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+                const card = cards[idx];
+                if (!card) return;
+                content.classList.add('swap');
+                setTimeout(() => {
+                    elTag.textContent = card.dataset.tagline;
+                    content.classList.remove('swap');
+                }, 220);
+            };
+
+            const update = () => {
+                const center = window.innerHeight * 0.5;
+                let closest = 0, min = Infinity;
+                cards.forEach((c, i) => {
+                    const r = c.getBoundingClientRect();
+                    const cy = r.top + r.height / 2;
+                    const d = Math.abs(center - cy);
+                    if (d < min) { min = d; closest = i; }
+                });
+                setActive(closest);
+            };
+
+            let raf = null;
+            const onScroll = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = null; update(); }); };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            update();
+        })();
     </script>
-  </body>
+</body>
 </html>
