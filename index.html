@@ -258,7 +258,22 @@
             display: none;
         }
 
-        /* 純 CSS Morph */
+        /* ───── Fluid Typography (Option B) ─────
+           Only kicks in ≥ 768px so mobile sizes stay intact.
+           clamp(min, growth, max) — growth in vw + rem hybrid
+        */
+        @media (min-width: 768px) {
+            .fluid-display     { font-size: clamp(3.5rem,  1.8vw + 2.6rem, 6.5rem)  !important; }
+            .fluid-display-md  { font-size: clamp(3rem,    1.6vw + 2.2rem, 5.5rem)  !important; }
+            .fluid-h2          { font-size: clamp(2.25rem, 1.1vw + 1.7rem, 4rem)    !important; }
+            .fluid-h3-card     { font-size: clamp(1.75rem, 0.5vw + 1.5rem, 2.5rem)  !important; }
+            .fluid-script-lg   { font-size: clamp(2.5rem,  1.4vw + 1.7rem, 4.5rem)  !important; }
+            .fluid-script-xl   { font-size: clamp(3rem,    1.8vw + 2rem,   5.75rem) !important; }
+            .fluid-body-lg     { font-size: clamp(1.05rem, 0.25vw + 1rem,  1.35rem) !important; }
+            .fluid-quote       { font-size: clamp(2.5rem,  1.6vw + 1.8rem, 5.25rem) !important; }
+        }
+
+        /* 純 CSS Morph - mask reveal slide-up */
         .css-morph-container {
             display: inline-flex;
             position: relative;
@@ -270,37 +285,38 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            height: 1.4em; 
+            height: 1.4em;
+            overflow: hidden;
         }
 
         .css-morph-top {
             display: inline-block;
-            transform-origin: bottom;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.35, 1);
             line-height: 1;
+            transform: translateY(0);
+            transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .css-morph-bottom {
             position: absolute;
-            left: 0;
-            display: inline-block;
-            transform-origin: top;
-            transform: scaleY(0) translateY(-4%);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, calc(-50% + 140%));
             color: var(--morph-target-color, #A64B2A);
             font-family: Baskervville, "Cactus Classical Serif", serif;
             font-style: italic;
             font-size: 1.25em;
             line-height: 1;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.35, 1);
+            white-space: nowrap;
+            transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: scaleY(0); }
-        .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: scaleY(1) translateY(-4%); }
+        .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: translateY(-140%); }
+        .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: translate(-50%, -50%); }
 
         /* 觸控裝置上停用 hover morph，避免 tap 後仍卡住 */
         @media (hover: none) {
-            .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: none; }
-            .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: scaleY(0) translateY(-4%); }
+            .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: translateY(0); }
+            .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: translate(-50%, calc(-50% + 140%)); }
         }
 
 
@@ -388,7 +404,7 @@
             </div>
 
             <button id="menu-toggle" aria-label="開啟選單" class="uppercase tracking-[0.15em] text-sm md:text-base group flex items-center gap-3 md:gap-4 focus:outline-none">
-                <div class="hidden sm:block relative overflow-hidden h-[1.4em] w-[4em]">
+                <div class="hidden sm:block relative overflow-hidden h-[1.4em] w-[5em]">
                     <div id="menu-text-wrap" class="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center">
                         <span class="js-stagger-morph text-current font-medium">Menu</span>
                     </div>
@@ -437,7 +453,7 @@
                 <div class="overflow-hidden mb-5 md:mb-6">
                     <span class="block font-sans text-xs sm:text-sm md:text-base tracking-[0.2em] font-medium uppercase text-brand-terracotta hero-fade-up opacity-0 translate-y-4">The Boutique Brand Partner</span>
                 </div>
-                <h1 class="font-serif text-[3.25rem] leading-[1.05] sm:text-6xl md:text-7xl xl:text-[5.5rem] md:leading-[1.05] tracking-tight text-brand-brown hero-text opacity-0 translate-y-8">
+                <h1 class="fluid-display font-serif text-[3.25rem] leading-[1.05] sm:text-6xl md:text-7xl xl:text-[5.5rem] md:leading-[1.05] tracking-tight text-brand-brown hero-text opacity-0 translate-y-8">
                     Crafting <br>
                     <span class="italic text-brand-terracotta font-light">Signatures.</span>
                 </h1>
@@ -466,35 +482,32 @@
 
     <!-- 🌟 Brand Philosophy & Services Index -->
     <section id="philosophy" class="pt-20 pb-24 md:pt-40 md:pb-48 px-6 md:px-12 max-w-screen-xl mx-auto text-center">
-        <span class="font-script text-[2.5rem] sm:text-4xl md:text-5xl lg:text-6xl text-brand-terracotta mb-6 md:mb-8 block ani-this bottom-in text-balance leading-tight">The Invisible Architecture of Scent and Memories</span>
+        <span class="fluid-script-lg font-script text-[2.5rem] sm:text-4xl md:text-5xl lg:text-6xl text-brand-terracotta mb-6 md:mb-8 block ani-this bottom-in text-balance leading-tight">The Invisible Architecture of Scent and Memories</span>
         
         <h2 class="font-serif text-xl sm:text-2xl md:text-3xl lg:text-[2.25rem] leading-[1.7] md:leading-[1.8] tracking-wide text-brand-brown max-w-4xl mx-auto ani-this bottom-in delay-1 text-balance">
             「香氣，是空間裡最無形的裝潢，也是品牌最深刻的語彙。我們深信，每一個用心經營的<span class="italic text-brand-terracotta">獨立品牌</span>，都值得擁有一抹讓人過鼻不忘的專屬記憶。透過細膩的調香工藝，我們將您的故事化作空氣中流動的藝術。」
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-16 mt-16 md:mt-32 max-w-5xl mx-auto text-left">
-            <a href="#odm" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ani-this bottom-in delay-2 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
+            <a href="#odm" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ease-out ani-this bottom-in delay-2 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
                 <div class="flex justify-between items-end mb-3 md:mb-4">
                     <span class="text-brand-terracotta font-serif text-xl md:text-2xl">01.</span>
-                    <span aria-hidden="true" class="block h-px w-8 bg-brand-brown/30 group-hover:bg-brand-terracotta group-hover:w-14 transition-all duration-500 mb-2"></span>
                 </div>
                 <h3 class="font-serif text-2xl md:text-3xl mb-2 text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">靈活代工</h3>
                 <p class="font-sans text-xs md:text-sm uppercase tracking-widest opacity-50 text-brand-brown">Boutique ODM</p>
             </a>
 
-            <a href="#workshops" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ani-this bottom-in delay-3 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
+            <a href="#workshops" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ease-out ani-this bottom-in delay-3 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
                 <div class="flex justify-between items-end mb-3 md:mb-4">
                     <span class="text-brand-terracotta font-serif text-xl md:text-2xl">02.</span>
-                    <span aria-hidden="true" class="block h-px w-8 bg-brand-brown/30 group-hover:bg-brand-terracotta group-hover:w-14 transition-all duration-500 mb-2"></span>
                 </div>
                 <h3 class="font-serif text-2xl md:text-3xl mb-2 text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">調香工藝體驗</h3>
                 <p class="font-sans text-xs md:text-sm uppercase tracking-widest opacity-50 text-brand-brown">Workshops</p>
             </a>
 
-            <a href="#services" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ani-this bottom-in delay-4 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
+            <a href="#services" class="group block border-t border-brand-brown/20 pt-5 md:pt-6 hover:border-brand-terracotta transition-colors duration-500 ease-out ani-this bottom-in delay-4 cursor-pointer active:bg-brand-brown/5 -mx-2 px-2 md:mx-0 md:px-0 rounded-sm">
                 <div class="flex justify-between items-end mb-3 md:mb-4">
                     <span class="text-brand-terracotta font-serif text-xl md:text-2xl">03.</span>
-                    <span aria-hidden="true" class="block h-px w-8 bg-brand-brown/30 group-hover:bg-brand-terracotta group-hover:w-14 transition-all duration-500 mb-2"></span>
                 </div>
                 <h3 class="font-serif text-2xl md:text-3xl mb-2 text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">空間香氣營銷</h3>
                 <p class="font-sans text-xs md:text-sm uppercase tracking-widest opacity-50 text-brand-brown">Scent Marketing</p>
@@ -512,7 +525,7 @@
                     <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-0 md:mb-6 block ani-this bottom-in">01.</span>
                     <span class="md:hidden font-sans text-[11px] tracking-[0.2em] uppercase opacity-50 ani-this bottom-in">04 Pillars</span>
                 </div>
-                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] md:leading-[1.2] mt-3 md:mt-0 ani-this bottom-in delay-1">
+                <h2 class="fluid-h2 font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] md:leading-[1.2] mt-3 md:mt-0 ani-this bottom-in delay-1">
                     靈活代工<br>
                     <span class="italic text-brand-terracotta font-light">Boutique ODM</span>
                 </h2>
@@ -606,7 +619,7 @@
 
     <!-- 🌟 Typographic Intermission -->
     <section class="theme-switch py-24 md:py-48 px-6 md:px-12 bg-brand-brown text-center overflow-hidden flex flex-col justify-center items-center" data-switchto="brown">
-        <h2 class="font-serif text-[2.25rem] sm:text-5xl md:text-6xl lg:text-7xl leading-[1.25] md:leading-[1.3] italic font-light tracking-tight text-brand-beige ani-this bottom-in max-w-4xl mx-auto text-balance">
+        <h2 class="fluid-quote font-serif text-[2.25rem] sm:text-5xl md:text-6xl lg:text-7xl leading-[1.25] md:leading-[1.3] italic font-light tracking-tight text-brand-beige ani-this bottom-in max-w-4xl mx-auto text-balance">
             “Come and experience the profound artistry of our craft.”
         </h2>
         <p class="font-sans text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase opacity-60 text-brand-beige mt-7 md:mt-10 ani-this bottom-in delay-1 max-w-2xl text-balance">
@@ -619,7 +632,7 @@
         <div class="px-6 md:px-12 max-w-screen-2xl mx-auto mb-10 md:mb-16 flex flex-col md:flex-row md:justify-between md:items-end gap-5 md:gap-6">
             <div>
                 <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-4 md:mb-6 block ani-this bottom-in">02.</span>
-                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] ani-this bottom-in delay-1">
+                <h2 class="fluid-h2 font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] ani-this bottom-in delay-1">
                     調香工藝體驗 <span class="italic text-brand-terracotta font-light">Workshops</span>
                 </h2>
                 <p class="font-sans text-base md:text-lg mt-5 md:mt-6 opacity-80 max-w-xl leading-[1.9] md:leading-loose ani-this bottom-in delay-2 text-balance">
@@ -707,7 +720,7 @@
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-center">
             <div class="md:col-span-5 md:col-start-2 order-1">
                 <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-4 md:mb-6 block ani-this bottom-in">03.</span>
-                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl mb-6 md:mb-8 leading-[1.15] md:leading-[1.2] ani-this bottom-in delay-1">
+                <h2 class="fluid-h2 font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl mb-6 md:mb-8 leading-[1.15] md:leading-[1.2] ani-this bottom-in delay-1">
                     空間香氣營銷<br>
                     <span class="italic text-brand-terracotta font-light">Scent Marketing</span>
                 </h2>
@@ -733,7 +746,7 @@
         <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-10 md:mb-16 gap-5 md:gap-0">
             <div>
                 <span class="text-brand-terracotta font-serif text-xl md:text-2xl mb-4 md:mb-6 block ani-this bottom-in">04.</span>
-                <h2 class="font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] ani-this bottom-in delay-1">
+                <h2 class="fluid-h2 font-serif tracking-tight text-[2.5rem] sm:text-4xl md:text-5xl leading-[1.15] ani-this bottom-in delay-1">
                     品牌日誌 <span class="italic text-brand-terracotta font-light">Journal</span>
                 </h2>
             </div>
@@ -802,12 +815,12 @@
     <!-- Hebe Lab CTA -->
     <section id="hebe" class="theme-switch py-24 md:py-40 px-6 text-center overflow-hidden transition-colors duration-500 scroll-mt-24" data-switchto="terracotta">
         <div class="max-w-3xl mx-auto">
-            <span class="font-script text-[3rem] sm:text-5xl md:text-7xl mb-4 md:mb-6 block opacity-90 ani-this bottom-in leading-tight">Our In-house Brand</span>
-            <h2 class="font-serif text-[3rem] sm:text-5xl md:text-7xl mb-9 md:mb-12 tracking-wide ani-this bottom-in delay-1 leading-tight">
+            <span class="fluid-script-xl font-script text-[3rem] sm:text-5xl md:text-7xl mb-4 md:mb-6 block opacity-90 ani-this bottom-in leading-tight">Our In-house Brand</span>
+            <h2 class="fluid-script-xl font-serif text-[3rem] sm:text-5xl md:text-7xl mb-9 md:mb-12 tracking-wide ani-this bottom-in delay-1 leading-tight">
                 Hebe Lab
             </h2>
             <div class="ani-this bottom-in delay-2">
-                <a href="#" class="group inline-block border border-current py-3.5 md:py-4 px-8 md:px-10 uppercase font-sans tracking-widest text-sm md:text-lg hover:bg-[#FDFBF9] hover:text-brand-terracotta transition duration-500">
+                <a href="#" class="group inline-block border border-current py-3.5 md:py-4 px-8 md:px-10 uppercase font-sans tracking-widest text-sm md:text-lg">
                     <span class="js-stagger-morph text-current font-medium">Explore Store</span>
                 </a>
             </div>
@@ -897,7 +910,7 @@
                     const wrapper = document.createElement('span');
                     wrapper.className = 'css-morph-char';
 
-                    const delay = (index * 0.02) + 's';
+                    const delay = (index * 0.05) + 's';
 
                     const topSpan = document.createElement('span');
                     topSpan.className = 'css-morph-top';
@@ -907,7 +920,7 @@
                     const bottomSpan = document.createElement('span');
                     bottomSpan.className = 'css-morph-bottom';
                     bottomSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
-                    bottomSpan.style.transitionDelay = `calc(${delay} + 0.05s)`;
+                    bottomSpan.style.transitionDelay = `calc(${delay} + 0.04s)`;
 
                     wrapper.appendChild(topSpan);
                     wrapper.appendChild(bottomSpan);
