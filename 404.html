@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#FDFBF9">
+    <title>404 · Scent.M</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Cactus+Classical+Serif&family=Mea+Culpa&family=Montserrat:wght@300;400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            beige: '#F3EAE1',
+                            terracotta: '#A64B2A',
+                            brown: '#3B261D',
+                            moss: '#3B4A3D',
+                            light: '#FDFBF9'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Baskervville', '"Cactus Classical Serif"', 'serif'],
+                        sans: ['Montserrat', '"Noto Sans TC"', 'sans-serif'],
+                        script: ['"Mea Culpa"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ───── 全局設定 ───── */
+        :root {
+            --ease: cubic-bezier(0.25, 1, 0.35, 1);
+            --morph-target-color: #A64B2A;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        html { overflow-x: clip; }
+        @supports not (overflow: clip) {
+            html { overflow-x: hidden; }
+        }
+
+        body {
+            transition: background-color 0.45s ease, color 0.45s ease;
+            background-color: #FDFBF9; 
+            color: #3B261D;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* iOS Safari momentum scroll on horizontal carousels */
+        .h-snap {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+            touch-action: pan-x pan-y;
+            scroll-behavior: smooth;
+        }
+        /* Center-snap "tug" — release auto-pulls active item to viewport center */
+        @media (max-width: 767px) {
+            [data-carousel] > * { scroll-snap-stop: always; }
+            /* Match actual padding to scroll-padding so first/last cards centre properly */
+            [data-carousel="odm"] {
+                scroll-padding-inline: 7vw;
+                padding-left: 7vw !important;
+                padding-right: 7vw !important;
+            }
+            [data-carousel="journal"] {
+                scroll-padding-inline: 9vw;
+                padding-left: 9vw !important;
+                padding-right: 9vw !important;
+            }
+            [data-carousel="workshops"] {
+                scroll-padding-inline: 11vw;
+                padding-left: 11vw !important;
+                padding-right: 11vw !important;
+            }
+            /* ODM card: stack title + badge so neither cuts off, equalise paragraph height */
+            [data-carousel="odm"] article > .flex {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.4rem;
+                margin-bottom: 1.1rem;
+            }
+            [data-carousel="odm"] article h3 {
+                font-size: 1.65rem;
+                line-height: 1.15;
+            }
+            [data-carousel="odm"] article p {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+            }
+        }
+
+        /* ───── ODM Scroll-story (desktop only) ───── */
+        @media (min-width: 768px) {
+            [data-carousel="odm"] article {
+                opacity: 0.42;
+                transition: opacity 0.7s cubic-bezier(0.25,1,0.35,1);
+            }
+            [data-carousel="odm"] article.is-active {
+                opacity: 1;
+            }
+            .odm-now {
+                margin-top: 2.25rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid rgba(59,38,29,0.14);
+            }
+            .odm-now-label {
+                font-size: 11px;
+                letter-spacing: 0.28em;
+                text-transform: uppercase;
+                opacity: 0.5;
+                font-weight: 500;
+                margin-bottom: 0.9rem;
+                display: block;
+            }
+            .odm-now-content {
+                transition: opacity 0.45s cubic-bezier(0.25,1,0.35,1), transform 0.45s cubic-bezier(0.25,1,0.35,1);
+            }
+            .odm-now-content.swap {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            .odm-now-roman {
+                font-family: var(--font-serif, 'Cormorant Garamond', serif);
+                color: #A64B2A;
+                font-size: 1.05rem;
+                letter-spacing: 0.05em;
+                margin-right: 0.5rem;
+            }
+            .odm-now-title {
+                font-family: var(--font-serif, 'Cormorant Garamond', serif);
+                font-size: 1.35rem;
+                line-height: 1.25;
+                color: inherit;
+                display: inline;
+            }
+            .odm-now-tagline {
+                font-size: 0.78rem;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                opacity: 0.55;
+                margin-top: 0.55rem;
+                display: block;
+            }
+            .odm-now-progress {
+                display: flex;
+                gap: 0.4rem;
+                margin-top: 1.1rem;
+            }
+            .odm-now-progress span {
+                width: 18px;
+                height: 1px;
+                background: rgba(59,38,29,0.2);
+                transition: background 0.5s ease, width 0.5s ease;
+            }
+            .odm-now-progress span.on {
+                background: #A64B2A;
+                width: 28px;
+            }
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+
+        .hero-img { transform: scale(1.15); }
+        .film-filter { filter: contrast(1.05) sepia(0.15) brightness(0.95); }
+
+        body.in-terracotta {
+            background-color: #A64B2A;
+            color: #F3EAE1;
+            --morph-target-color: #F3EAE1;
+        }
+        /* 橙色背景下，hover 變橙色會睇唔到 —
+           改為反向處理：hover 變深啡，與米色預設文字形成強烈對比，呼應品牌色階 */
+        body.in-terracotta .group:hover .group-hover\:text-brand-terracotta,
+        body.in-terracotta .hover\:text-brand-terracotta:hover {
+            color: #3B261D !important;
+        }
+        body.in-terracotta .hover\:border-brand-terracotta:hover {
+            border-color: #3B261D !important;
+        }
+        body.in-terracotta .group:hover .group-hover\:border-brand-terracotta {
+            border-color: #3B261D !important;
+        }
+        
+        #main-header {
+            color: #3B261D; 
+            transition: padding 0.4s var(--ease), background-color 0.4s ease, color 0.4s ease;
+        }
+        #main-header.is-scrolled {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            background-color: rgba(253, 251, 249, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        @media (max-width: 767px) {
+            #main-header.is-scrolled {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+        }
+        body.in-terracotta #main-header.is-scrolled { background-color: rgba(166, 75, 42, 0.95); }
+        body.in-brown #main-header.is-scrolled { background-color: rgba(59, 38, 29, 0.95); color: #F3EAE1; }
+
+        body.menu-open #main-header { 
+            background-color: transparent !important; 
+            color: #F3EAE1 !important; 
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        body.menu-open .line-1, body.menu-open .line-2 { background-color: #F3EAE1 !important; }
+
+        /* ───── Scroll Reveal ───── */
+        .ani-this { transition: transform 0.8s var(--ease), opacity 0.8s var(--ease); }
+        .ani-this.bottom-in { transform: translateY(40px); opacity: 0; }
+        .ani-this.left-in   { transform: translateX(-40px); opacity: 0; }
+        .ani-this.in { transform: translate(0, 0) !important; opacity: 1 !important; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .hover-scale-img { will-change: transform; }
+
+        .text-balance { text-wrap: balance; }
+
+        /* 隱藏 Scrollbar */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ───── Section logo accent (no text) ───── */
+        .section-tag {
+            display: inline-block;
+            color: #A64B2A;
+            line-height: 1;
+        }
+        .section-tag .logo-inline {
+            display: inline-block;
+            width: 56px;
+            aspect-ratio: 379 / 107;
+            background-color: currentColor;
+            -webkit-mask: url('logo-ornament.png') no-repeat center / contain;
+                    mask: url('logo-ornament.png') no-repeat center / contain;
+        }
+        @media (min-width: 768px) {
+            .section-tag .logo-inline { width: 68px; }
+        }
+
+        /* ───── Hibi Lab wordmark (inherits currentColor for scroll theme swap) ───── */
+        .hibi-mark {
+            display: inline-block;
+            width: clamp(160px, 22vw, 320px);
+            aspect-ratio: 600 / 338;
+            background-color: currentColor;
+            -webkit-mask: url('hibi-lab-logo.png') no-repeat center / contain;
+                    mask: url('hibi-lab-logo.png') no-repeat center / contain;
+        }
+
+        /* ───── Fluid Typography (Utopia-style: anchor 768→1600, plateau past 1600) ─────
+           Only kicks in ≥ 768px so mobile sizes stay intact.
+           Calibrated against Aesop / Le Labo / luxury editorial baselines.
+        */
+        @media (min-width: 768px) {
+            .fluid-display     { font-size: clamp(3.5rem,  2.12rem + 2.88vw, 5rem)    !important; }
+            .fluid-display-md  { font-size: clamp(3rem,    1.62rem + 2.88vw, 4.5rem)  !important; }
+            .fluid-h2          { font-size: clamp(2.5rem,  1.35rem + 2.40vw, 3.75rem) !important; }
+            .fluid-h3-card     { font-size: clamp(1.75rem, 1.29rem + 0.96vw, 2.25rem) !important; }
+            .fluid-script-lg   { font-size: clamp(2.5rem,  1.35rem + 2.40vw, 3.75rem) !important; }
+            .fluid-script-xl   { font-size: clamp(3rem,    1.62rem + 2.88vw, 4.5rem)  !important; }
+            .fluid-body-lg     { font-size: clamp(1.05rem, 0.96rem + 0.19vw, 1.2rem)  !important; }
+            .fluid-quote       { font-size: clamp(2.5rem,  1.12rem + 2.88vw, 4rem)    !important; }
+        }
+
+                /* 純 CSS Morph */
+        .css-morph-container {
+            display: inline-flex;
+            position: relative;
+            vertical-align: bottom;
+        }
+
+        .css-morph-char {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.6em;
+        }
+
+        .css-morph-top {
+            display: inline-block;
+            transform-origin: bottom;
+            transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+            line-height: 1;
+        }
+
+        .css-morph-bottom {
+            position: absolute;
+            left: 0;
+            display: inline-block;
+            transform-origin: top;
+            transform: scaleY(0) translateY(-4%);
+            color: var(--morph-target-color, #A64B2A);
+            font-family: Baskervville, "Cactus Classical Serif", serif;
+            font-style: italic;
+            font-size: 1.25em;
+            line-height: 1;
+            transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: scaleY(0); }
+        .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: scaleY(1) translateY(-4%); }
+
+        /* 觸控裝置上停用 hover morph，避免 tap 後仍卡住 */
+        @media (hover: none) {
+            .group:hover .css-morph-top, .css-morph-container:hover .css-morph-top { transform: none; }
+            .group:hover .css-morph-bottom, .css-morph-container:hover .css-morph-bottom { transform: scaleY(0) translateY(-4%); }
+        }
+
+
+        /* ─── Mobile-only refinements (DO NOT touch md+) ─── */
+        @media (max-width: 767px) {
+            /* 防止橫向溢出 */
+            body { overflow-x: hidden; }
+
+            /* 手機版 Hero - 維持比例但更克制留白 */
+            .hero-mobile-meta {
+                font-feature-settings: "kern" 1, "liga" 1;
+            }
+
+            /* 手機版 Carousel 進度指示器 */
+            .mobile-progress {
+                position: relative;
+                width: 56px;
+                height: 1px;
+                background: rgba(59, 38, 29, 0.15);
+                overflow: hidden;
+            }
+            body.in-brown .mobile-progress { background: rgba(243, 234, 225, 0.2); }
+            body.in-terracotta .mobile-progress { background: rgba(243, 234, 225, 0.25); }
+            .mobile-progress-fill {
+                position: absolute;
+                inset: 0;
+                background: #A64B2A;
+                transform-origin: left center;
+                transform: scaleX(0);
+                transition: transform 0.5s cubic-bezier(0.25, 1, 0.35, 1);
+            }
+
+            /* 手機 carousel slide hover-on-tap → focus-visible 視覺 */
+            .h-snap > *:active .hover-scale-img {
+                transform: scale(1.03);
+                transition: transform 0.4s ease-out;
+            }
+
+            /* 浮動 WhatsApp 在手機放大且更易按 */
+            .wa-float {
+                bottom: calc(1.25rem + var(--safe-bottom));
+            }
+        }
+
+        @media (min-width: 768px) {
+            #mobile-anchor-bar { display: none; }
+            .mobile-only-block { display: none !important; }
+        }
+
+        /* Pull‑indicator (僅手機 carousel 邊緣指示) */
+        /* ───── Editorial drop cap (CSS initial-letter w/ float fallback) ───── */
+        .essay-dropcap::first-letter {
+            font-family: Baskervville, "Cactus Classical Serif", serif;
+            font-style: italic;
+            color: #A64B2A;
+            font-weight: 400;
+            -webkit-initial-letter: 3 2;
+                    initial-letter: 3 2;
+            margin-right: 0.4rem;
+        }
+        @supports not ((initial-letter: 3) or (-webkit-initial-letter: 3)) {
+            .essay-dropcap::first-letter {
+                float: left;
+                font-size: 5.5em;
+                line-height: 0.82;
+                margin-top: 0.02em;
+                margin-right: 0.5rem;
+                margin-bottom: -0.1em;
+            }
+            @media (min-width: 768px) {
+                .essay-dropcap::first-letter { font-size: 6.2em; }
+            }
+        }
+
+        .edge-fade-r {
+            background: linear-gradient(to left, rgba(253,251,249,1), rgba(253,251,249,0));
+        }
+        body.in-brown .edge-fade-r {
+            background: linear-gradient(to left, rgba(59,38,29,1), rgba(59,38,29,0));
+        }
+
+        /* 手機 Hero CTA tappable 強化 */
+        @media (max-width: 767px) {
+            .hero-cta-primary, .hero-cta-secondary {
+                min-height: 48px;
+                display: inline-flex;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-terracotta selection:text-white">
+
+    <!-- 導航欄 -->
+    <nav id="main-header" class="fixed w-full z-[70] px-6 md:px-12 py-5 md:py-8 flex justify-between items-center border-b border-transparent">
+        <a href="index.html" class="js-stagger-morph font-serif text-xl md:text-2xl tracking-widest uppercase relative z-[70]">Scent.M</a>
+        
+        <div class="flex items-center gap-6 md:gap-10 relative z-[70]">
+            <div class="hidden md:flex items-center gap-5 text-current opacity-70">
+                <a href="#" aria-label="Instagram" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                    <i class="fa-brands fa-instagram text-[1.25rem]"></i>
+                </a>
+                <a href="#" aria-label="Facebook" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                    <i class="fa-brands fa-facebook-f text-[1.05rem] translate-y-[1px]"></i>
+                </a>
+                <a href="#" aria-label="YouTube" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                    <i class="fa-brands fa-youtube text-[1.35rem] translate-y-[1px]"></i>
+                </a>
+            </div>
+
+            <button id="menu-toggle" aria-label="開啟選單" class="uppercase tracking-[0.15em] text-sm md:text-base group flex items-center gap-3 md:gap-4 focus:outline-none">
+                <div class="hidden sm:block relative overflow-hidden h-[1.4em] w-[5em]">
+                    <div id="menu-text-wrap" class="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center">
+                        <span class="js-stagger-morph text-current font-medium">Menu</span>
+                    </div>
+                    <div id="close-text-wrap" class="absolute inset-x-0 top-full h-full transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center">
+                        <span class="js-stagger-morph text-current font-medium">Close</span>
+                    </div>
+                </div>
+
+                <div class="w-7 md:w-8 flex flex-col gap-[5px] justify-center items-center">
+                    <span class="line-1 block w-full h-[1px] bg-current transform origin-center transition-colors duration-300"></span>
+                    <span class="line-2 block w-full h-[1px] bg-current transform origin-center transition-colors duration-300"></span>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 全螢幕選單 -->
+    <div id="fullscreen-menu" class="fixed inset-0 bg-[#111111] z-[60] flex flex-col justify-center px-6 md:px-12 invisible opacity-0 overflow-y-auto py-24">
+        <div class="max-w-screen-2xl mx-auto w-full flex flex-col gap-4 md:gap-8 text-brand-beige">
+            <div class="overflow-hidden pb-2"><a href="about.html" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">About.</a></div>
+            <div class="overflow-hidden pb-2"><a href="index.html#odm" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Boutique ODM.</a></div>
+            <div class="overflow-hidden pb-2"><a href="workshops.html" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Workshops.</a></div>
+            <div class="overflow-hidden pb-2"><a href="index.html#services" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Scent Marketing.</a></div>
+            <div class="overflow-hidden pb-2"><a href="journal.html" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Journal.</a></div>
+            <div class="overflow-hidden pb-2"><a href="contact.html" class="menu-link text-[2.75rem] sm:text-5xl md:text-7xl font-serif italic tracking-tight block w-max hover:text-brand-terracotta transition-colors duration-300">Contact.</a></div>
+
+            <div class="overflow-hidden mt-6 md:mt-8">
+                <div class="menu-link flex items-center gap-6 opacity-70">
+                    <a href="#" aria-label="Instagram" class="flex items-center justify-center w-6 hover:text-brand-terracotta hover:opacity-100 transition-all duration-300"><i class="fa-brands fa-instagram text-[1.5rem]"></i></a>
+                    <a href="#" aria-label="Facebook" class="flex items-center justify-center w-6 hover:text-brand-terracotta hover:opacity-100 transition-all duration-300"><i class="fa-brands fa-facebook-f text-[1.2rem] translate-y-[1px]"></i></a>
+                    <a href="#" aria-label="YouTube" class="flex items-center justify-center w-6 hover:text-brand-terracotta hover:opacity-100 transition-all duration-300"><i class="fa-brands fa-youtube text-[1.6rem] translate-y-[1px]"></i></a>
+                </div>
+            </div>
+            <div class="overflow-hidden pb-2">
+                <a href="https://hibilab.com" target="_blank" rel="noopener" class="menu-link inline-flex items-center gap-3 font-sans text-sm md:text-base tracking-[0.2em] uppercase opacity-70 hover:opacity-100 hover:text-brand-terracotta transition-all duration-300 mt-2">
+                    <span>Explore Hebe Lab</span>
+                    <i class="fa-solid fa-arrow-right-long"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 404 · Centered editorial -->
+    <section class="min-h-[80vh] min-h-[80svh] flex items-center px-6 md:px-12 py-24 md:py-32">
+        <div class="max-w-2xl mx-auto text-center">
+            <span class="font-serif italic text-brand-terracotta text-2xl md:text-3xl block mb-6 md:mb-8 ani-this bottom-in">— 404 —</span>
+
+            <h1 class="fluid-display font-serif text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[5.5rem] leading-[1.05] tracking-tight text-brand-brown text-balance ani-this bottom-in delay-1 mb-10 md:mb-14">
+                找不到此頁面。
+            </h1>
+
+            <p class="font-serif italic text-xl md:text-2xl text-brand-brown/65 max-w-xl mx-auto leading-[1.6] mb-12 md:mb-16 ani-this bottom-in delay-2 text-balance">
+                你尋找的頁面可能已經移走或不再存在。請透過下方連結繼續瀏覽。
+            </p>
+
+            <div class="ani-this bottom-in delay-3 flex flex-wrap items-center justify-center gap-6 md:gap-10 font-sans text-xs md:text-sm tracking-[0.22em] uppercase">
+                <a href="index.html" class="text-brand-brown hover:text-brand-terracotta transition-colors duration-300 pb-1 border-b border-brand-brown hover:border-brand-terracotta">返回首頁</a>
+                <a href="workshops.html" class="text-brand-brown/55 hover:text-brand-terracotta transition-colors duration-300 pb-1 border-b border-transparent hover:border-brand-terracotta">查看工作坊</a>
+                <a href="journal.html" class="text-brand-brown/55 hover:text-brand-terracotta transition-colors duration-300 pb-1 border-b border-transparent hover:border-brand-terracotta">品牌日誌</a>
+                <a href="contact.html" class="text-brand-brown/55 hover:text-brand-terracotta transition-colors duration-300 pb-1 border-b border-transparent hover:border-brand-terracotta">聯絡我們</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-14 md:pt-24 pb-8 md:pb-12 px-6 md:px-12 border-t border-current transition-colors">
+        <div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+
+            <!-- Brand block -->
+            <div class="md:col-span-5 ani-this bottom-in">
+                <h3 class="mb-5 md:mb-8 inline-block">
+                    <img src="scentm-logo.png" alt="Scent.M" class="block w-[88px] md:w-[112px] h-auto" />
+                </h3>
+                <p class="font-sans text-base md:text-lg leading-[1.85] md:leading-loose opacity-80 max-w-md mb-6 md:mb-8">
+                    Scent.M 作為獨立品牌背後的推手，提供專業空間香氣營銷與精緻 ODM 代工服務。我們透過頂級調香工藝，為您的品牌空間與產品注入獨特靈魂。
+                </p>
+                <div class="flex items-center gap-5 text-current opacity-70">
+                    <a href="#" aria-label="Instagram" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                        <i class="fa-brands fa-instagram text-[1.25rem]"></i>
+                    </a>
+                    <a href="#" aria-label="Facebook" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                        <i class="fa-brands fa-facebook-f text-[1.05rem] translate-y-[1px]"></i>
+                    </a>
+                    <a href="#" aria-label="YouTube" class="hover:text-brand-terracotta hover:opacity-100 transition-all duration-300 flex items-center justify-center w-5">
+                        <i class="fa-brands fa-youtube text-[1.35rem] translate-y-[1px]"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- SERVICES -->
+            <div class="md:col-span-2 md:col-start-7 ani-this bottom-in delay-1">
+                <h4 class="font-sans uppercase tracking-[0.18em] text-xs md:text-sm text-brand-terracotta mb-5 md:mb-8 font-medium">Services</h4>
+                <ul class="font-sans space-y-3 md:space-y-4 text-base md:text-lg flex flex-col items-start">
+                    <li><a href="index.html#odm" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">靈活代工 ODM</a></li>
+                    <li><a href="workshops.html" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">調香工藝 Workshops</a></li>
+                    <li><a href="index.html#services" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">香氣營銷 Marketing</a></li>
+                </ul>
+            </div>
+
+            <!-- BRAND -->
+            <div class="md:col-span-2 md:col-start-9 ani-this bottom-in delay-2">
+                <h4 class="font-sans uppercase tracking-[0.18em] text-xs md:text-sm text-brand-terracotta mb-5 md:mb-8 font-medium">Brand</h4>
+                <ul class="font-sans space-y-3 md:space-y-4 text-base md:text-lg flex flex-col items-start">
+                    <li><a href="about.html" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">關於我們 About</a></li>
+                    <li><a href="journal.html" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">品牌日誌 Journal</a></li>
+                </ul>
+            </div>
+
+            <!-- CONNECT -->
+            <div class="md:col-span-2 md:col-start-11 ani-this bottom-in delay-3">
+                <h4 class="font-sans uppercase tracking-[0.18em] text-xs md:text-sm text-brand-terracotta mb-5 md:mb-8 font-medium">Connect</h4>
+                <ul class="font-sans space-y-3 md:space-y-4 text-base md:text-lg flex flex-col items-start">
+                    <li><a href="contact.html" class="inline-block hover:underline underline-offset-[8px] decoration-1 transition-colors duration-300">聯絡我們 Contact</a></li>
+                    <li><a href="index.html#hebe" class="inline-block hover:text-brand-terracotta transition-colors duration-300 font-medium">Hebe Lab &rarr;</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Sub-footer: legal + copyright -->
+        <div class="max-w-screen-2xl mx-auto mt-14 md:mt-24 pt-6 md:pt-8 border-t border-current/15 flex flex-col-reverse md:flex-row md:justify-between md:items-center gap-4 md:gap-0 font-sans text-xs md:text-sm opacity-55">
+            <p>© 2026 Scent.M. All rights reserved.</p>
+            <div class="flex gap-5 md:gap-8">
+                <a href="privacy.html" class="hover:opacity-100 hover:text-brand-terracotta transition-colors duration-300">Privacy Policy</a>
+                <a href="terms.html" class="hover:opacity-100 hover:text-brand-terracotta transition-colors duration-300">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+        <!-- 浮動 WhatsApp 按鈕 -->
+    <a href="https://wa.me/85212345678?text=你好，想了解更多關於香氣營銷/代工的服務！" target="_blank" rel="noopener noreferrer" 
+       aria-label="WhatsApp 查詢"
+       class="wa-float fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[50] group flex items-center bg-[#FDFBF9] border border-brand-brown/20 shadow-[0_4px_20px_rgba(59,38,29,0.08)] hover:border-brand-terracotta hover:shadow-[0_4px_20px_rgba(166,75,42,0.15)] rounded-full overflow-hidden transition-all duration-500">
+        <div class="max-w-0 group-hover:max-w-xs overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,1,0.35,1)] flex items-center opacity-0 group-hover:opacity-100">
+            <span class="font-sans text-xs md:text-sm tracking-[0.15em] uppercase font-medium text-brand-terracotta whitespace-nowrap pl-5 md:pl-6">
+                Bespoke Inquiry
+            </span>
+        </div>
+        <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-brand-brown group-hover:text-brand-terracotta transition-colors duration-500">
+            <i class="fa-brands fa-whatsapp text-2xl md:text-[1.75rem]"></i>
+        </div>
+    </a>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const isTouch = window.matchMedia('(hover: none)').matches;
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+        const lenis = new Lenis({
+            duration: isMobile ? 0.9 : 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothTouch: false, // 讓手機橫向 carousel 自然
+        });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+        lenis.on('scroll', ScrollTrigger.update);
+
+        function setupPureCSSMorph() {
+            const morphEls = document.querySelectorAll('.js-stagger-morph');
+            
+            morphEls.forEach(el => {
+                if(el.dataset.morphBound === "true") return;
+                el.dataset.morphBound = "true";
+
+                const text = el.innerText.trim();
+                el.innerHTML = '';
+                el.classList.add('css-morph-container');
+
+                const chars = text.split('');
+                chars.forEach((char, index) => {
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'css-morph-char';
+
+                    const delay = (index * 0.05) + 's';
+
+                    const topSpan = document.createElement('span');
+                    topSpan.className = 'css-morph-top';
+                    topSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
+                    topSpan.style.transitionDelay = delay;
+
+                    const bottomSpan = document.createElement('span');
+                    bottomSpan.className = 'css-morph-bottom';
+                    bottomSpan.innerHTML = char === ' ' ? '&nbsp;' : char;
+                    bottomSpan.style.transitionDelay = `calc(${delay} + 0.04s)`;
+
+                    wrapper.appendChild(topSpan);
+                    wrapper.appendChild(bottomSpan);
+                    el.appendChild(wrapper);
+                });
+            });
+        }
+        setupPureCSSMorph();
+
+        const heroTl = gsap.timeline();
+        heroTl.to('#hero-mask', { scaleY: 0, duration: 1.5, ease: 'expo.inOut' })
+              .to('.hero-img', { scale: 1, duration: 2, ease: 'expo.out' }, "-=1.5")
+              .to('.hero-text', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, "-=1.0")
+              .to('.hero-fade-up', { opacity: 1, y: 0, duration: 1.0, stagger: 0.2, ease: 'power2.out' }, "-=0.8");
+
+        const header = document.querySelector('#main-header');
+        const menuToggle = document.getElementById('menu-toggle');
+        const fullscreenMenu = document.getElementById('fullscreen-menu');
+        
+        gsap.set('.menu-link', { yPercent: 100, opacity: 0 });
+
+        if (menuToggle && fullscreenMenu) {
+            const menuTextWrap = document.getElementById('menu-text-wrap');
+            const closeTextWrap = document.getElementById('close-text-wrap');
+            const line1 = menuToggle.querySelector('.line-1');
+            const line2 = menuToggle.querySelector('.line-2');
+            let isMenuOpen = false;
+            let isAnimating = false; 
+
+            menuToggle.addEventListener('click', () => {
+                if (isAnimating) return;
+                isAnimating = true;
+                setTimeout(() => { isAnimating = false; }, 500);
+
+                isMenuOpen = !isMenuOpen;
+                menuToggle.setAttribute('aria-label', isMenuOpen ? '關閉選單' : '開啟選單');
+                if (isMenuOpen) {
+                    document.body.classList.add('menu-open');
+                    
+                    if(menuTextWrap) menuTextWrap.style.transform = 'translateY(-100%)';
+                    if(closeTextWrap) closeTextWrap.style.transform = 'translateY(-100%)';
+                    
+                    gsap.to(fullscreenMenu, { autoAlpha: 1, duration: 0.4, ease: "power2.out" });
+                    gsap.to('.menu-link', { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power4.out', delay: 0.2 });
+                    
+                    if (line1) gsap.to(line1, { y: 3, rotation: -45, duration: 0.3 });
+                    if (line2) gsap.to(line2, { y: -3, rotation: 45, duration: 0.3 });
+                    
+                    lenis.stop();
+                } else {
+                    document.body.classList.remove('menu-open');
+                    
+                    if(menuTextWrap) menuTextWrap.style.transform = 'translateY(0)';
+                    if(closeTextWrap) closeTextWrap.style.transform = 'translateY(0)';
+                    
+                    gsap.to('.menu-link', { yPercent: 100, opacity: 0, duration: 0.4, ease: 'power3.in' });
+                    gsap.to(fullscreenMenu, { autoAlpha: 0, duration: 0.4, ease: "power2.in", delay: 0.2 });
+                    
+                    if (line1) gsap.to(line1, { y: 0, rotation: 0, duration: 0.3 });
+                    if (line2) gsap.to(line2, { y: 0, rotation: 0, duration: 0.3 });
+                    
+                    lenis.start();
+                }
+            });
+
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (isMenuOpen) menuToggle.click();
+                });
+            });
+        }
+
+        lenis.on('scroll', (e) => {
+            if (window.scrollY > 50) {
+                header.classList.add('is-scrolled');
+            } else {
+                header.classList.remove('is-scrolled');
+            }
+        });
+
+        function setupAniThis() {
+            gsap.utils.toArray('.ani-this').forEach(item => {
+                ScrollTrigger.create({
+                    trigger: item,
+                    once: true,
+                    start: "top 88%",
+                    onEnter: () => item.classList.add('in')
+                });
+            });
+        }
+        setTimeout(setupAniThis, 100);
+
+        const THEME_CLASSES = ['in-terracotta', 'in-brown', 'in-moss'];
+
+        function applyTheme(kind) {
+            THEME_CLASSES.forEach(c => {
+                if (c !== `in-${kind}`) document.body.classList.remove(c);
+            });
+            document.body.classList.add(`in-${kind}`);
+        }
+        function clearTheme() {
+            THEME_CLASSES.forEach(c => document.body.classList.remove(c));
+        }
+
+        gsap.utils.toArray('.theme-switch').forEach(item => {
+            const target = item.dataset.switchto;
+            ScrollTrigger.create({
+                trigger: item,
+                start: 'top center+=20%', end: 'bottom top',
+                onEnter: () => applyTheme(target), onEnterBack: () => applyTheme(target),
+                onLeave: () => clearTheme(), onLeaveBack: () => clearTheme(),
+            });
+        });
+
+        const heroBgWrapper = document.querySelector('.parallax-wrapper');
+        if (heroBgWrapper && !isMobile) {
+            gsap.to(heroBgWrapper, {
+                yPercent: 15,
+                ease: 'none',
+                scrollTrigger: { trigger: "header", start: 'top top', end: 'bottom top', scrub: true }
+            });
+        }
+
+        // (Workshops now uses native scroll-snap, see bindScrollProgress below)
+
+        // ─────────── Native scroll progress (ODM + Journal) ───────────
+        function bindScrollProgress(carouselEl, progressFill, progressLabel) {
+            if (!carouselEl) return;
+            const items = carouselEl.querySelectorAll('[data-idx]');
+            const total = items.length;
+            if (!total) return;
+
+            let raf = null;
+            const update = () => {
+                raf = null;
+                const rect = carouselEl.getBoundingClientRect();
+                const center = rect.left + rect.width / 2;
+                let bestIdx = 0;
+                let bestDist = Infinity;
+                items.forEach((it, i) => {
+                    const r = it.getBoundingClientRect();
+                    const c = r.left + r.width / 2;
+                    const d = Math.abs(c - center);
+                    if (d < bestDist) { bestDist = d; bestIdx = i; }
+                });
+                if (progressFill) progressFill.style.transform = `scaleX(${(bestIdx + 1) / total})`;
+                if (progressLabel) progressLabel.textContent = `${String(bestIdx + 1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+            };
+            const onScroll = () => {
+                if (raf) return;
+                raf = requestAnimationFrame(update);
+            };
+            carouselEl.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            update();
+        }
+
+        bindScrollProgress(
+            document.querySelector('[data-carousel="odm"]'),
+            document.querySelector('[data-progress="odm"]'),
+            document.getElementById('odm-progress-label')
+        );
+        bindScrollProgress(
+            document.querySelector('[data-carousel="workshops"]'),
+            document.querySelector('[data-progress="workshops"]'),
+            document.getElementById('workshops-progress-label')
+        );
+        bindScrollProgress(
+            document.querySelector('[data-carousel="journal"]'),
+            document.querySelector('[data-progress="journal"]'),
+            document.getElementById('journal-progress-label')
+        );
+
+        // ─────────── Smooth anchor scroll w/ Lenis ───────────
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const href = a.getAttribute('href');
+                if (!href || href === '#' || href.length < 2) return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                const offset = isMobile ? -56 : -32;
+                lenis.scrollTo(target, { offset });
+            });
+        });
+
+
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); }, 200);
+        });
+
+        // ─────────── Desktop drag-to-scroll for Workshops (matches mobile native swipe) ───────────
+        (function() {
+            if (window.matchMedia('(max-width: 767px)').matches) return;
+            const containers = document.querySelectorAll('[data-carousel="workshops"]');
+            containers.forEach(el => {
+                let isDown = false, lastX = 0, moved = false;
+                let velocity = 0, lastT = 0, raf = null;
+
+                const stopMomentum = () => { if (raf) { cancelAnimationFrame(raf); raf = null; } };
+                const momentum = () => {
+                    velocity *= 0.95;                       // iOS-like friction
+                    el.scrollLeft -= velocity;
+                    if (Math.abs(velocity) > 0.5) {
+                        raf = requestAnimationFrame(momentum);
+                    } else {
+                        raf = null;
+                        // Restore snap so the carousel settles to nearest card
+                        el.style.scrollSnapType = '';
+                        el.style.scrollBehavior = '';
+                    }
+                };
+
+                el.style.cursor = 'grab';
+
+                el.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    isDown = true;
+                    moved = false;
+                    lastX = e.pageX;
+                    lastT = performance.now();
+                    velocity = 0;
+                    stopMomentum();
+                    el.style.cursor = 'grabbing';
+                    el.style.scrollSnapType = 'none';      // disable snap during drag
+                    el.style.scrollBehavior = 'auto';       // kill CSS smooth (was fighting JS)
+                    e.preventDefault();
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    const now = performance.now();
+                    const dx = e.pageX - lastX;             // 1:1 mapping like mobile
+                    const dt = Math.max(1, now - lastT);
+                    if (Math.abs(dx) > 3) moved = true;
+                    el.scrollLeft -= dx;
+                    // velocity in px/frame (assume 60fps)
+                    velocity = dx / dt * 16;
+                    lastX = e.pageX;
+                    lastT = now;
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (!isDown) return;
+                    isDown = false;
+                    el.style.cursor = 'grab';
+                    if (Math.abs(velocity) > 1.5) {
+                        raf = requestAnimationFrame(momentum);
+                    } else {
+                        el.style.scrollSnapType = '';
+                        el.style.scrollBehavior = '';
+                    }
+                });
+
+                // Suppress clicks if the user actually dragged
+                el.addEventListener('click', (e) => {
+                    if (moved) { e.preventDefault(); e.stopPropagation(); }
+                }, true);
+            });
+        })();
+
+        // ───────── ODM Scroll-story (desktop only) ─────────
+        (function() {
+            if (window.matchMedia('(max-width: 767px)').matches) return;
+            const cards = document.querySelectorAll('[data-carousel="odm"] article');
+            const panel = document.getElementById('odm-now');
+            if (!cards.length || !panel) return;
+            const content = panel.querySelector('.odm-now-content');
+            const elTag   = panel.querySelector('[data-now="tagline"]');
+            const dots    = panel.querySelectorAll('[data-now="dots"] span');
+            let activeIdx = -1;
+
+            const setActive = (idx) => {
+                if (idx === activeIdx) return;
+                activeIdx = idx;
+                cards.forEach((c, i) => c.classList.toggle('is-active', i === idx));
+                dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+                const card = cards[idx];
+                if (!card) return;
+                content.classList.add('swap');
+                setTimeout(() => {
+                    elTag.textContent = card.dataset.tagline;
+                    content.classList.remove('swap');
+                }, 220);
+            };
+
+            const update = () => {
+                const center = window.innerHeight * 0.5;
+                let closest = 0, min = Infinity;
+                cards.forEach((c, i) => {
+                    const r = c.getBoundingClientRect();
+                    const cy = r.top + r.height / 2;
+                    const d = Math.abs(center - cy);
+                    if (d < min) { min = d; closest = i; }
+                });
+                setActive(closest);
+            };
+
+            let raf = null;
+            const onScroll = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = null; update(); }); };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            update();
+        })();
+    </script>
+</body>
+</html>
